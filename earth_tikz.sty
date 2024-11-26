@@ -1,0 +1,103 @@
+% Author: Izaak Neutelings (January 2024)
+% Adapted by Max Melching from https://tikz.net/astronomy_seasons/
+
+
+\ProvidesPackage{earth_tikz}
+
+\RequirePackage{tikz}
+\RequirePackage{xcolor}
+
+
+% -- For reproducible results, we set seeds
+\pgfmathsetseed{96}
+
+
+\usetikzlibrary{
+    arrows.meta,bending, % for arrow head size
+    calc, % for calculating coordinates
+    decorations.pathmorphing, % for random steps
+    decorations.pathreplacing, % for braces
+    fpu, % for higher precision in "random steps"
+    intersections,
+}
+
+% FADINGS
+\usetikzlibrary{fadings}
+\begin{tikzfadingfrompicture}[name=halo]
+  \shade[inner color=transparent!0,outer color=transparent!100] (0,0) circle (0.9);
+\end{tikzfadingfrompicture}
+%\begin{tikzfadingfrompicture}[name=bright spot]
+%  \shade[inner color=transparent!50,outer color=transparent!100] (0,0) circle (0.6);
+%\end{tikzfadingfrompicture}
+
+% COLORS
+% \colorlet{water}{blue!70!cyan!80}
+% \colorlet{water}{blue!94!black}
+\colorlet{water}{blue!70!cyan!80!black}
+\colorlet{grass}{green!70!teal!90!black}
+\colorlet{sand}{yellow!70!brown!90!black}
+\colorlet{shadow}{water!60!black}
+
+
+% -- Define a variable to track if defaults were applied
+\def\earthcalledfrombinary{false}
+
+
+\pgfkeys{
+	/frames/earth/.is family, /frames/earth,
+	default/.style = {
+        radius = 1,
+        tilt = 0,
+    },
+    radius/.estore in = \RE,
+    tilt/.estore in = \angE,
+}
+
+
+\tikzset{
+    >={Stealth[inset=0,angle'=27]},
+    /pgf/fpu/install only={reciprocal}, % for higher precision in "random steps"
+    wrinkle/.style={rounded corners=0.6*\RE pt,decorate,decoration={random steps,segment length=\RE pt,amplitude=0.6*\RE pt}}, % For higher RE, things have to be changed here as well. So increasing scale is better solution -> ah, scale does not really help... So we do manually again
+    land/.style={ultra thin,draw=#1!40!black,rotate=-\angE,postaction={fill=#1},wrinkle},
+    mysmallarrow/.style={-{Latex[length=3,width=2,bend]},red,line width=0.4,line cap=round},
+}
+
+
+\newcommand{\drawearth}[1][]{%
+    \ifthenelse{\equal{\earthcalledfrombinary}{true}}{
+    }{
+	   \pgfkeys{/frames/earth, default, #1}
+    }
+
+
+    \begin{scope}
+        \fill[water] (0,0) circle(\RE); % Earth fill (even)
+        
+        \begin{scope} % clip
+            \clip (0,0) circle(\RE);
+            
+            
+            \fill[land=grass,rotate=-2] % land mass
+            (-30:0.36*\RE) ellipse({0.22*\RE} and {0.50*\RE}) % Africa south
+            (45:0.17*\RE) ellipse({0.39*\RE} and {0.21*\RE}) % North Africa
+            {[rotate=22] (31:0.83*\RE) ellipse({0.45*\RE} and {0.28*\RE})} % Asia
+            {[rotate=38] (54:0.55*\RE) ellipse({0.33*\RE} and {0.09*\RE})} % West Europa
+            {[rotate=22] (65:0.79*\RE) ellipse({0.19*\RE} and {0.04*\RE})} % North Europa
+            {[rotate=-10] (216:1.10*\RE) ellipse({0.22*\RE} and {0.40*\RE})} % South America
+            ;
+            \fill[land=sand] % sahara
+            (46:0.18*\RE) ellipse({0.35*\RE} and {0.16*\RE});
+            \fill[land=sand,rotate=22] % Middle East
+            (24:0.69*\RE) ellipse({0.26*\RE} and {0.07*\RE});
+            \fill[land=white,rotate=-65] (186:0.95*\RE) ellipse({0.08*\RE} and {0.20*\RE}); % Greenland
+            \fill[land=white] (88:\RE) ellipse({0.4*\RE} and {0.13*\RE}); % ice sheet north
+            \fill[land=white] (-96:\RE) ellipse({0.4*\RE} and {0.1*\RE}); % ice sheet south
+            
+            
+            \fill[path fading=halo,white,opacity=0.42] % create bright spot shifted towards sun
+            (-180:{0.7*\RE} and {0.2*\RE}) circle(1.2*\RE);
+        \end{scope}
+        \draw[black,ultra thin] (0,0) circle(\RE); % Earth outline
+    \end{scope}
+
+}

@@ -1,0 +1,697 @@
+%% start of file `cbc_frames_tikz.sty'.
+%% Copyright 2024 Max Melching (m-melching@web.de).
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License version 1.3c,
+% available at http://www.latex-project.org/lppl/.
+
+
+\ProvidesPackage{cbc_frames_tikz}
+
+\RequirePackage{tikz}
+\RequirePackage{tikz-3dplot}
+\RequirePackage{xcolor}
+\RequirePackage{wasysym}  % For \ascnode symbol
+
+% \input{pictures/binaries/earth}
+\RequirePackage{earth_tikz}
+
+
+\usetikzlibrary{
+	arrows.meta,
+	math,
+	calc,
+    3d,
+    backgrounds,
+}
+
+% -- Define custom layers keyword. Credit: https://tex.stackexchange.com/questions/20425/z-level-in-tikz
+\tikzset{layer/.style={%
+    execute at begin scope={\pgfonlayer{#1}},
+    execute at end scope={\endpgfonlayer}
+}}
+
+
+
+\tikzset{>={Stealth[inset=0,angle'=27]}}
+
+
+% \definecolor{darkgoldenrod}{rgb}{0.72, 0.53, 0.04}
+% \definecolor{goldenrod}{rgb}{0.85, 0.65, 0.13}
+
+\definecolor{persianblue}{rgb}{0.11, 0.22, 0.73}
+% \definecolor{cobalt}{rgb}{0.0, 0.28, 0.67}
+% \definecolor{brightcerulean}{rgb}{0.11, 0.67, 0.84}
+\definecolor{burntorange}{rgb}{0.8, 0.33, 0.0}
+% \definecolor{darkcerulean}{rgb}{0.03, 0.27, 0.49}
+
+
+% \definecolor{applegreen}{rgb}{0.55, 0.71, 0.0}
+% \definecolor{brilliantrose}{rgb}{1.0, 0.33, 0.64}
+
+
+
+\definecolor{brown(traditional)}{rgb}{0.59, 0.29, 0.0}
+\definecolor{carolinablue}{rgb}{0.6, 0.73, 0.89}
+\definecolor{amethyst}{rgb}{0.6, 0.4, 0.8}
+
+
+
+\definecolor{racolor}{named}{brown(traditional)}
+\definecolor{deccolor}{named}{teal}
+\definecolor{distancecolor}{named}{purple}
+\definecolor{polcolor}{named}{burntorange}
+\definecolor{phirefcolor}{named}{carolinablue}
+\definecolor{longasccolor}{named}{persianblue}
+\definecolor{inccolor}{named}{amethyst}
+
+
+\tdplotsetmaincoords{70}{120} % So that a default is set
+
+
+
+% -- Some defaults have to be defined manually, not sure why (I think use of curly brackets is one issue; but no idea why ascnode one does not work...)
+\def\LineOfSightLabel{$\vec{N}$}
+\def\PhiRefLabel{$\phi_\mathrm{ref}$}
+\def\AscNodeLabel{$\ascnode$}
+
+\pgfkeys{
+	/frames/.is family, /frames,
+	default/.style = {
+        mass1 = 20,
+        mass2 = 10,
+        inclination = 0,
+        polarization = 0,
+        longascnodes = 0,
+        phiref = 0,
+        ra = 0,
+        dec = 0,
+        eccentricity = 0,
+        axislen = 3,
+        binaryscalefactor = 0.5, % Radius of each binary component, in multiples of axislen
+        binarydistance = 3, % Distance of binary from earth, in multiples of axislen
+        uselayers = false,
+        showcelestialframe = true,
+        celestialframeaxes = true,
+        celestialframehelperlines = true,
+        celestialframeangles = true,
+        celestialframelineofsight = true,
+        ralabel = $\alpha$,
+        declabel = $\delta$,
+        polarizationlabel = $\psi$,
+        distancelabel = $D_L$,
+        % lineofsightlabel = {$\vec{N}$},
+        showsignalframe = true,
+        signalframeaxes = true,
+        signalframehelperlines = true,
+        signalframeangles = true,
+        inclinationlabel = $\iota$,
+        omegalabel = $\Omega$,
+        % phireflabel = $\phi_\mathrm{ref}$,
+        % ascnodelabel = $\ascnode$,
+        showsourceframe = true,
+        sourceframeaxes = true,
+        sourceframehelperlines = true,
+        earthradius = 1.25,
+        earthtilt = 0,
+        drawifo = true,
+        ifoarmlength = 2,
+    },
+    mass1/.estore in = \massone,
+    mass2/.estore in = \masstwo,
+	inclination/.estore in = \Inclination,
+	polarization/.estore in = \Polarization,
+    longascnodes/.estore in = \LongAscNodes,
+    phiref/.estore in = \PhiRef,
+    ra/.estore in = \Ra,
+    dec/.estore in = \Dec,
+    eccentricity/.estore in = \eccentricity,
+	axislen/.estore in = \AxisLen,
+	binaryscalefactor/.estore in = \binaryscalefactor,
+    binarydistance/.estore in = \binarydistance,
+    uselayers/.estore in = \UseLayers,
+    earthradius/.estore in = \RE,
+    earthtilt/.estore in = \angE,
+    showcelestialframe/.estore in = \ShowCelestialFrame,
+    celestialframeaxes/.estore in = \CelestialFrameAxes,
+    celestialframehelperlines/.estore in = \CelestialFrameHelperlines,
+    celestialframeangles/.estore in = \CelestialFrameAngles,
+    celestialframelineofsight/.estore in = \ShowLineOfSight,
+    ralabel/.estore in = \RaLabel,
+    declabel/.estore in = \DecLabel,
+    polarizationlabel/.estore in = \PolarizationLabel,
+    distancelabel/.estore in = \DistanceLabel,
+    lineofsightlabel/.estore in = \LineOfSightLabel,
+    showsignalframe/.estore in = \ShowSignalFrame,
+    signalframeaxes/.estore in = \SignalFrameAxes,
+    signalframehelperlines/.estore in = \SignalFrameHelperlines,
+    signalframeangles/.estore in = \SignalFrameAngles,
+    inclinationlabel/.estore in = \InclinationLabel,
+    omegalabel/.estore in = \OmegaLabel,
+    phireflabel/.estore in = \PhiRefLabel,
+    ascnodelabel/.estore in = \AscNodeLabel,
+    showsourceframe/.estore in = \ShowSourceFrame,
+    sourceframeaxes/.estore in = \SourceFrameAxes,
+    sourceframehelperlines/.estore in = \SourceFrameHelperlines,
+    drawifo/.estore in = \ShowIFO,
+    ifoarmlength/.estore in = \armlength,
+}
+
+\def\LongAscOmega{90 + \LongAscNodes}
+
+\def\BHsizepersolmass{1/20*0.7 cm} % So that 10 solmass BH has size of 0.7 cm
+
+
+
+% TODO: in the future, maybe implement a more complex keyword logic here. With separate families for source frame, signal frame,  etc (to control whether axes or angles are drawn for example)
+
+% TODO: instead of above logic, just introduce keyword arguments "celestialframe", "signalframe", "sourceframe" and if they are false, all relevant other arguments are set automatically (axes, angles etc)?
+
+
+% NOTE: reason that rotation has no effect sometimes is due to named coordinates being used I think! So when rotating something like "(earthpos) -- (binaryposition)" seems to have no effect, we have to give coordinates like "(earthpos) -- ++(1, 0, 0)"
+
+
+% TODO: maybe put some stuff in background? And earth + binary in forefround?
+
+
+% NOTE: in order to understand how and why this file works, knowing about the following behaviour is crucial:
+% - rotating in two separate environments is same as doing it in same order in a single one
+% - order in which rotations are applied is from top to bottom
+% - when in a rotated coordinate system, "rotate about x" refers to an operation in the rotated system, and not the initial, unrotated one
+
+
+
+\newcommand{\drawframes}[1][]{%
+    % -- Import keys for styling
+    \def\earthcalledfrombinary{true}
+    \pgfkeys{/frames, default, #1}
+
+    % -- Define image layers
+    \pgfdeclarelayer{angles}
+    \pgfdeclarelayer{axes}
+    \pgfdeclarelayer{binary}
+    \pgfdeclarelayer{BackGround}
+    \pgfdeclarelayer{ForeGround}
+    \pgfsetlayers{BackGround,angles,main,axes,ForeGround} % Order from back to front
+
+    % -- Check whether layers shall be used
+    \ifthenelse{\equal{\UseLayers}{false}}{
+        \tikzset{layer/.style={}}
+    }{}
+
+
+    \ifthenelse{\equal{\ShowCelestialFrame}{true}}{
+    % -- Draw earth
+    \coordinate (earthpos) at (0, 0, 0);
+    
+    \begin{scope}[
+        tdplot_screen_coords,
+        shift={(earthpos)}, % To be future proof, does nothing right now
+        layer=BackGround
+    ]
+        \drawearth;
+        
+        % -- Draw interferometer on earth
+        \ifthenelse{\equal{\ShowIFO}{true}}{
+            \begin{scope}[
+                tdplot_screen_coords,
+                shift={(-0.12, 0.55)},
+                rotate=305,
+                % scale=0.2*\earthradius/1.25,
+                % scale=0.25*\RE,
+                % scale=0.2*\RE,
+                scale=0.1*\RE,
+            ]
+                \usetikzlibrary{decorations.markings, calc, arrows.meta, positioning, shadings}
+                
+                \tikzset{arrow inside/.style = {postaction=decorate, decoration={markings, mark=at position .67 with \arrow{stealth}}}}
+                
+                % \tikzset{laser/.style={black, fill=black!40}}
+                \tikzset{laser/.style={line width=0pt, black, outer color=black!40, inner color=black!32}}
+                \tikzset{ray/.style={thick, red}}%, arrow inside}} % Inner and outer color does not work
+                \tikzset{mirror/.style={line width=0pt,, outer color=black!50, inner color=white}}
+                \tikzset{photodiode/.style={line width=0pt,, outer color=orange!90!black, inner color=orange!40}}
+                
+                
+                \coordinate (BS) at (0, 0);
+                \coordinate (MX) at ($(BS) + (\armlength, 0)$);
+                \coordinate (MY) at ($(BS) + (0, \armlength)$);
+                \coordinate (LA) at ($(BS) - (0.3*\armlength, 0)$);
+                \coordinate (PD) at ($(BS) - (0, 0.3*\armlength)$);
+            
+            
+                \draw[ray] (LA) -- (BS) {}; % Laser -> beam splitter
+                \draw[ray] (BS) -- (MX) {}; % Beam splitter -> right mirror
+                \draw[ray] (BS) -- (MY) {}; % Beam splitter -> upper mirror
+                \draw[ray] (BS) -- (PD) {}; % Beam splitter -> photo diode
+            
+                \draw[laser, shift={(LA)}] (0, -0.15) rectangle (-0.7, 0.15) {};
+                \draw[mirror, shift={(MX)}] (0, -0.3) rectangle (-0.2, 0.3) {};
+                \draw[mirror, shift={(MY)}] (-0.3, 0) rectangle (0.3, -0.2) {};
+                \draw[photodiode, shift={(PD)}] (0.3, 0) -- (-0.3, 0) arc[start angle=-180, end angle=0, radius=0.3cm-0.1pt] {};
+            \end{scope}
+        }{}
+    
+    \end{scope}
+    
+    % \tikzmath{\earthwidth=2*\RE;}
+    % \node at (earthpos) {\includegraphics[width=\earthwidth cm, angle=\angE]{pictures/binaries/earth-1303628_1920.png}};
+    % -- I like how it looks, but could be a little too dark overall
+
+    
+    % -- Right now we are in celestial frame
+    \begin{scope}[
+        tdplot_main_coords, % Make sure their default value is used
+    ]
+        % -- Celestial frame axes definition + drawing
+        \coordinate (xdoubleprimetip) at (\AxisLen, 0, 0);
+        \coordinate (ydoubleprimetip) at (0, \AxisLen, 0);
+        \coordinate (zdoubleprimetip) at (0, 0, \AxisLen);
+            
+        \draw[
+            layer=axes,
+            ->,
+        ] (earthpos) -- ++(xdoubleprimetip) node[anchor=north]{$x''$};
+        
+        \draw[
+            layer=axes,
+            ->,
+        ] (earthpos) -- ++(ydoubleprimetip) node[anchor=north]{$y''$};
+        
+        \draw[
+            layer=axes,
+            ->,
+        ] (earthpos) -- ++(zdoubleprimetip) node[anchor=south]{$z''$};
+    
+
+        \ifthenelse{\equal{\CelestialFrameAngles}{true}}{
+            % -- Visualization of dec
+            \ifnum\Dec=0
+            \else
+                \begin{scope}[
+                    rotate around z=\Ra,
+                    rotate around x=-90,
+                    deccolor,
+                ]
+                    \draw[
+                        layer=angles,
+                        fill,
+                        opacity=0.42,
+                    ] (earthpos) -- (\AxisLen, 0, 0) arc (0:-\Dec:\AxisLen);
+                    
+                    \draw[
+                        layer=angles,
+                        ->,
+                        thick,
+                    ] (earthpos) ++(\AxisLen, 0, 0) arc (0:-\Dec:\AxisLen) node[midway, right] {\DecLabel};
+                \end{scope}
+            \fi
+        
+        
+            % -- Visualization of ra
+            \ifnum\Ra=0
+            \else
+                \begin{scope}[
+                    racolor,
+                ]
+                    \draw[
+                        layer=angles,
+                        fill,
+                        opacity=0.42,
+                    ] (earthpos) -- (\AxisLen, 0, 0) arc (0:\Ra:\AxisLen);
+                    
+                    \draw[
+                        layer=angles,
+                        ->,
+                        thick,
+                    ] (earthpos) ++(\AxisLen, 0, 0) arc (0:\Ra:\AxisLen) node[midway, below] {\RaLabel};
+                \end{scope}
+            \fi
+        }{}
+
+    \end{scope}
+
+    }{} % End of DrawCelestialFrame if clause
+
+
+    % -- Rotations to go into signal frame
+    \begin{scope}[
+        tdplot_main_coords,
+        rotate around z=\Ra,
+        rotate around y=-\Dec, % Fine for position, no direction involved
+    ]
+        \coordinate (binaryposition) at (\binarydistance*\AxisLen, 0, 0);
+    \end{scope}
+
+
+    % -- Shift to really go into signal frame, in addition to rotation
+    % \begin{scope}[
+    %     tdplot_main_coords,
+    %     shift={(binaryposition)},
+    % 	\ifthenelse{\equal{\ShowCelestialFrame}{true}}{ -> error
+    %         rotate around x=90+\Dec,
+    %         % -- Potential TODO: rotate to orientate relative to signal frame
+    %         % rotate around z=\Ra,
+    %         % rotate around y=-\Dec,
+    %         % rotate around x=\Dec-90,
+    %         % rotate around x=\Dec, % For new understanding of coordinate definition -> not quite right
+    %         % rotate around z=\Ra, % also not working yet
+    %         % rotate around y=\Dec, % also not working yet
+    %     }{}
+    % ]
+    \ifthenelse{\equal{\ShowCelestialFrame}{true}}{
+        % -- Apply rotations
+        \begin{scope}[
+            tdplot_main_coords,
+            shift={(binaryposition)},
+            % -- V1
+            % rotate around z=-90+\Ra,
+            % % rotate around x=-90+\Dec, % For \vec{n}||z'
+            % rotate around x=90+\Dec, % For \vec{n} anti-parallel z'
+            % -- V2
+            % rotate around x=-90+\Dec, % For \vec{n}||z'
+            % % rotate around x=-90+\Dec, % For \vec{n} anti-parallel z'
+            % rotate around z=\Ra+\LongAscNodes,
+            % -- Hmmm unlucky, we have to rotate about either x or z, depending on value of ra, right?
+            % -- NEW TESTING
+            % rotate around z=\Ra,
+            % rotate around y=-90-\Dec,
+            % 
+            rotate around z=-90+\Ra,
+            rotate around x=90+\Dec,
+        ]
+
+        % TODO: always apply Polarization rotation?
+        \begin{scope}[
+            % rotate around z=-\Polarization, % Clockwise about z'
+            rotate around z=\Polarization, % Counter-clockwise about z'
+        ]
+    }{
+        % -- No rotations required
+        \begin{scope}[
+            tdplot_main_coords,
+            shift={(binaryposition)},
+        ]    
+    }
+        % -- Signal frame axes definition + drawing
+        \coordinate (xprimetip) at (\AxisLen, 0, 0);
+        \coordinate (yprimetip) at (0, \AxisLen, 0);
+        \coordinate (zprimetip) at (0, 0, \AxisLen);
+
+        \ifthenelse{\equal{\SignalFrameAxes}{true}}{
+            \draw[
+                layer=axes,
+                ->,
+            ] (binaryposition) -- (xprimetip) node[anchor=north]{$x'$};
+            
+            \draw[
+                layer=axes,
+                ->,
+            ] (binaryposition) -- (yprimetip) node[anchor=north]{$y'$};
+            
+            \draw[
+                layer=axes,
+                ->,
+            ] (binaryposition) -- (zprimetip) node[anchor=south]{$z'$};
+        }{}
+
+        
+        % -- Helper lines
+        \ifthenelse{\equal{\SignalFrameHelperlines}{true}}{
+            \begin{scope}[
+                canvas is xy plane at z=0,
+            ]
+                \draw[
+                    layer=BackGround,
+                    thick,
+                    gray!70!black,
+                    dotted,
+                    opacity=0.5,
+                ] (0.0, 0.0, 0.0) circle(\AxisLen cm) {};
+            \end{scope}
+        }{}
+
+
+        % -- Rotations to go into source frame
+        \begin{scope}[
+            % rotate around z=-\LongAscOmega,
+            rotate around z=\LongAscOmega,
+        ]
+            \begin{scope}[
+                rotate around x=\Inclination,
+                rotate around z=\PhiRef,
+            ]
+     
+                \begin{scope}[
+                    canvas is xy plane at z=0, % Needed for rotation of circle to work properly
+                ]
+                    \coordinate (bhoneposition) at (\binaryscalefactor*\AxisLen, 0, 0);
+                    \coordinate (bhtwoposition) at (-\binaryscalefactor*\AxisLen, 0, 0);
+                    % TODO: maybe respect COM? Instead of just putting it into middle
+
+                    % \coordinate (com) at (${(\massone*(bhoneposition) + \masstwo*(bhtwoposition))}/{(\massone + \masstwo)}$);
+                    % \coordinate (com) at ($\massone*(bhoneposition)/{\massone + \masstwo}$);
+                    % \coordinate (com) at (barycentric cs: bhoneposition=\massone, bhtwoposition=\masstwo);
+                    % \node at (barycentric cs:bhoneposition=\massone, bhtwoposition=\masstwo){test};
+
+                    % -- Following may be overly complicated, but it works
+                    \coordinate (bhonepositionresc) at ($ {\masstwo/(\massone+\masstwo)}*(bhoneposition) $);
+                    \coordinate (bhtwopositionresc) at ($ {\massone/(\massone+\masstwo)}*(bhtwoposition) $);
+                    \coordinate (com) at ($ (bhonepositionresc) + (bhtwopositionresc) $);
+
+                    \coordinate (bhonepositioncom) at ($ 2*(bhonepositionresc) $);
+                    \coordinate (bhtwopositioncom) at ($ 2*(bhtwopositionresc) $);
+                    % -- 2 only works because we want distance between them. Since axislen is already in x-component, we only have to multiply with 2 to get distance between them -> see https://en.wikipedia.org/wiki/Barycenter_(astronomy)#Two-body_problem
+
+                    
+                    \draw[
+                        gray,
+                        dashed,
+                        thick,
+                        opacity=0.5,
+                        yscale=1-\eccentricity,
+                    ] (com) circle(\binaryscalefactor*\AxisLen cm) {};
+                    
+                    \node[
+                        fill,
+                        circle,
+                        minimum size={\massone*\BHsizepersolmass},
+                        inner sep=0pt,
+                    % ] at (com)++(bhonepositioncom) {};
+                    ] at (bhonepositioncom) {};
+                    
+                    \node[
+                        fill,
+                        circle,
+                        minimum size={\masstwo*\BHsizepersolmass},
+                        inner sep=0pt,
+                    % ] at (bhtwoposition) {};
+                    ] at (bhtwopositioncom) {};
+                \end{scope}
+    
+    
+                % -- Source frame axes definition + drawing
+                \coordinate (xtip) at (\AxisLen, 0, 0);
+                \coordinate (ytip) at (0, \AxisLen, 0);
+                \coordinate (ztip) at (0, 0, \AxisLen);
+
+                \ifthenelse{\equal{\SourceFrameAxes}{true}}{
+                    \draw[
+                        layer=axes,
+                        ->,
+                    ] (binaryposition) -- (xtip) node[anchor=north]{$x$};
+            
+                    \draw[
+                        layer=axes,
+                        ->,
+                    ] (binaryposition) -- (ytip) node[anchor=north]{$y$};
+                    
+                    \draw[
+                        layer=axes,
+                        ->,
+                    ] (binaryposition) -- (ztip) node[anchor=south]{$z$};
+                }{}
+        
+
+                \ifthenelse{\equal{\SignalFrameAngles}{true}}{
+                    % -- Visualization of inclination
+                    \ifnum\Inclination=0
+                    \else
+                        \begin{scope}[
+                            rotate around z=-\PhiRef,
+                            rotate around x=-\Inclination,
+                            rotate around y=-90,
+                            inccolor,
+                        ]
+                            \draw[
+                                layer=angles,
+                                fill,
+                                opacity=0.42,
+                            ] (binaryposition) -- (zprimetip) arc (0:-\Inclination:\AxisLen);
+                            
+                            \draw[
+                                layer=angles,
+                                ->,
+                                thick,
+                            % ] (binarypos) ++(\AxisLen, 0, 0) arc (0:\Inclination:\AxisLen) node[midway, above] {$\InclinationLabel$}; % Then we can omit x rotation in case of rotated binary system
+                            % ] (binaryposition) ++(\AxisLen, 0, 0) arc (0:-\Inclination:\AxisLen) node[midway, above] {$\InclinationLabel$};
+                            ] (zprimetip) arc (0:-\Inclination:\AxisLen) node[midway, above] {\InclinationLabel};
+                        \end{scope}
+                    \fi
+        
+        
+                    % -- Visualization of PhiRef
+                    \ifnum\PhiRef=0
+                    \else
+                        \draw[
+                            layer=angles,
+                            fill,
+                            opacity=0.42,
+                            phirefcolor,
+                        ] (binaryposition) -- (xtip) arc (0:-\PhiRef:\AxisLen);
+                        
+                        \draw[
+                            layer=angles,
+                            <-,
+                            thick,
+                            phirefcolor,
+                        ] (binaryposition) ++(xtip) arc (0:-\PhiRef:\AxisLen) node[midway, right] {\PhiRefLabel};
+                    \fi
+                }{}
+    
+    
+                % -- Helper lines
+    	        \ifthenelse{\equal{\SourceFrameHelperlines}{true}}{
+                    \begin{scope}[
+                        canvas is xy plane at z=0,
+                    ]
+                        \draw[
+                            layer=BackGround,
+                            thick,
+                            gray!70!black,
+                            dotted,
+                            opacity=0.5,
+                        ] (0.0, 0.0, 0.0) circle(\AxisLen cm) {};
+                    \end{scope}
+                }{}
+            \end{scope}
+
+
+        % -- Visualization of line of ascending node
+        \ifthenelse{\equal{\SignalFrameAxes}{true}}{
+            \draw[
+                layer=axes,
+                ->,
+            % ] (binaryposition) -- (\AxisLen, 0, 0) node[anchor=north]{AscNodeLabel};
+            % -- TODO: maybe move label to other place if longascnodes = 0? Then this here coincides with y'
+            % -- -> better solution: elongate line that indicates ascending node
+            ] (binaryposition) -- (1.25*\AxisLen, 0, 0) node[anchor=north]{\AscNodeLabel};
+        }{}
+        \end{scope}
+
+        \ifthenelse{\equal{\SignalFrameAngles}{true}}{
+            % -- Visualization of LongAscOmega
+            \ifnum\LongAscNodes=-90 % Doing this with LongAscOmega = 0 does not work, must be due to use of \def
+            \else
+                \draw[
+                    layer=angles,
+                    fill,
+                    opacity=0.42,
+                    longasccolor,
+                ] (binaryposition) -- (xprimetip) arc (0:\LongAscOmega:\AxisLen);
+                % ] (binaryposition) -- (xprimetip) arc (0:-\LongAscOmega:\AxisLen);
+                
+                \draw[
+                    layer=angles,
+                    ->,
+                    thick,
+                    longasccolor,
+                ] (binaryposition) ++(xprimetip) arc (0:\LongAscOmega:\AxisLen) node[midway, below] {\OmegaLabel};
+                % ] (binaryposition) ++(xprimetip) arc (0:-\LongAscOmega:\AxisLen) node[midway, below] {\OmegaLabel};
+            \fi
+    
+            % -- Visualization of polarization
+            \ifthenelse{\equal{\ShowCelestialFrame}{true}}{
+                \ifnum\Polarization=0
+                \else
+                    \draw[
+                        layer=angles,
+                        fill,
+                        opacity=0.42,
+                        polcolor,
+                    ] (binaryposition) -- (xprimetip) arc (0:-\Polarization:\AxisLen); % Counter-clockwise aroud z'
+                    % ] (binaryposition) -- (xprimetip) arc (0:\Polarization:\AxisLen); % Clockwise aroud z'
+                    
+                    \draw[
+                        layer=angles,
+                        <-,
+                        thick,
+                        polcolor,
+                    ] (binaryposition) ++(xprimetip) arc (0:-\Polarization:\AxisLen) node[midway, below] {\PolarizationLabel}; % Counter-clockwise around z'
+                    % ] (binaryposition) ++(xprimetip) arc (0:\Polarization:\AxisLen) node[midway, below] {\PolarizationLabel}; % Clockwise aroud z'
+                \fi
+            }{}
+        }{}
+        
+    \end{scope}
+    \ifthenelse{\equal{\ShowCelestialFrame}{true}}{
+        \end{scope}
+    }{}
+
+
+	\ifthenelse{\equal{\ShowCelestialFrame}{true}}{
+        % -- Visualization of relation between celestial and signal frame        
+        \begin{scope}[
+            layer=angles,
+            distancecolor,
+            thick,
+        ]
+            % \tikzmath{
+            %     \decrasignum = \Dec/abs(\Dec) + \Ra/abs(\Ra);
+            % }
+            % -- To minimize code duplication due to required if clause
+            % \ifnum\decra>0
+            % \ifdim\decrasignum pt>0 pt
+            \ifnum\Ra<0
+                \draw[
+                    ->,
+                ] (earthpos) -- (binaryposition) node[midway, above]{\LineOfSightLabel};
+            
+	            \ifthenelse{\equal{\DistanceLabel}{false}}{}{
+	            %\ifx\relax\DistanceLabel\relax
+	            %\else
+	                \draw[
+	                    decorate,
+	                    decoration={
+	                        brace,
+	                        amplitude=10pt,
+	                        % mirror, -> with typical orientation of the frames, not mirroring is actually better
+	                    },
+	                ] (earthpos) -- (binaryposition) node[midway, yshift=-18pt]{\DistanceLabel};
+	            %\else
+	            %\fi
+	            }
+            \else
+                \draw[
+                    ->,
+                ] (earthpos) -- (binaryposition) node[midway, below]{\LineOfSightLabel};
+                
+                \ifthenelse{\equal{\DistanceLabel}{false}}{}{
+               	%\ifx\relax\DistanceLabel\relax
+               	%\else
+	                \draw[
+	                    decorate,
+	                    decoration={
+	                        brace,
+	                        amplitude=10pt,
+	                    },
+	                ] (earthpos) -- (binaryposition) node[midway, yshift=18pt]{\DistanceLabel};
+	            %\else
+	            %\fi
+	            }
+            \fi
+
+        \end{scope}
+    }{}
+
+} 
