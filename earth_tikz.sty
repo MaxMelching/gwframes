@@ -5,6 +5,7 @@
 \ProvidesPackage{earth_tikz}
 
 \RequirePackage{tikz}
+\RequirePackage{tikz-3dplot}
 \RequirePackage{xcolor}
 
 
@@ -26,14 +27,10 @@
 \begin{tikzfadingfrompicture}[name=halo]
   \shade[inner color=transparent!0,outer color=transparent!100] (0,0) circle (0.9);
 \end{tikzfadingfrompicture}
-%\begin{tikzfadingfrompicture}[name=bright spot]
-%  \shade[inner color=transparent!50,outer color=transparent!100] (0,0) circle (0.6);
-%\end{tikzfadingfrompicture}
 
 % COLORS
 % \colorlet{water}{blue!70!cyan!80}
-% \colorlet{water}{blue!94!black}
-\colorlet{water}{blue!70!cyan!80!black}
+\colorlet{water}{blue!80!cyan!90!black}
 \colorlet{grass}{green!70!teal!90!black}
 \colorlet{sand}{yellow!70!brown!90!black}
 \colorlet{shadow}{water!60!black}
