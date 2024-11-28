@@ -17,7 +17,6 @@
 	arrows.meta,
 	math,
 	calc,
-    % 3d,
 }
 
 
@@ -28,7 +27,6 @@
 \definecolor{applegreen}{rgb}{0.55, 0.71, 0.0}
 \definecolor{brilliantrose}{rgb}{1.0, 0.33, 0.64}
 
-
 \definecolor{spincolor}{named}{brown}
 \definecolor{lcolor}{named}{persianblue}
 \colorlet{jcolor}{spincolor!50!lcolor}
@@ -36,8 +34,7 @@
 \definecolor{thetacolor}{named}{brilliantrose}
 
 
-\tdplotsetmaincoords{70}{135} % So that a default is set
-
+\tdplotsetmaincoords{70}{120} % So that a default is set
 
 
 \pgfkeys{
@@ -45,8 +42,6 @@
 	default/.style = {
         mass1 = 20,
         mass2 = 10,
-        % spin1 = {(0, 0, 0)},
-        % spin2 = {(0, 0, 0)},
         spin1x = 0,
         spin1y = 0,
         spin1z = 0,
@@ -57,11 +52,10 @@
         polarization = 0,
         eccentricity = 0,
         binaryseparation = 6,
+        showcombinedquantities = true,
     },
     mass1/.estore in = \massone,
     mass2/.estore in = \masstwo,
-    % spin1/.estore in = \spinone,
-    % spin2/.estore in = \spintwo,
     spin1x/.estore in = \spinonex,
     spin1y/.estore in = \spinoney,
     spin1z/.estore in = \spinonez,
@@ -72,123 +66,121 @@
 	polarization/.estore in = \Polarization,
     eccentricity/.estore in = \eccentricity,
     binaryseparation/.estore in = \binaryseparation,
+    showcombinedquantities/.estore in = \ShowCombinedQuantities,
 }
 
-\def\BHsizepersolmass{1/10*0.7 cm} % So that 10 solmass BH has size of 0.7 sm
+\def\BHsizepersolmass{1/20*0.7 cm} % So that 20 solmass BH has size of 0.7 sm
 \def\UnitSpinSize{1.5*\BHsizepersolmass} % To get proportions right
-
-
-
-% NOTE: reason that rotation has no effect sometimes is due to named coordinates being used I think! So when rotating something like "(earthpos) -- (binaryposition)" seems to have no effect, we have to give coordinates like "(earthpos) -- ++(1, 0, 0)"
 
 
 
 \newcommand{\drawbinary}[1][]{%
     % -- Import keys for styling
     \pgfkeys{/binary, default, #1}
-
+    
     \begin{scope}[
         tdplot_main_coords, % Make sure their default value is used
         rotate around z=\Polarization,
         rotate around x=\Inclination,
     ]
-        % -- Named coordinates are not affected by rotations, does not matter if we define before or after they are applied
+        % -- Named coordinates are not affected by rotations, does not
+        % -- matter if we define before or after they are applied
         \coordinate (center) at (0, 0, 0);
         \coordinate (bh1position) at (\binaryseparation/2, 0, 0);
         \coordinate (bh2position) at (-\binaryseparation/2, 0, 0);
     
         \begin{scope}[
-            scale=\UnitSpinSize, % Trick to resize coordinates
+            scale=\UnitSpinSize, % Trick to resize vectors
         ]
-            % \coordinate (spin1) at (\spinone);
-            % \coordinate (spin2) at (\spintwo);
             \coordinate (spin1) at (\spinonex, \spinoney, \spinonez);
             \coordinate (spin2) at (\spintwox, \spintwoy, \spintwoz);
             \coordinate (totalspin) at ($(spin1) + (spin2)$);
         \end{scope}
     
-        \coordinate (angularmomentum) at (0, 0, \binaryseparation/2);
+        \coordinate (angularmomentum) at (0, 0, 2*\UnitSpinSize);
         \coordinate (totalangularmomentum) at ($(angularmomentum) + (totalspin)$);
         \coordinate (chieff) at ($0.5*(angularmomentum)$);
         \coordinate (chip) at ($0.5*(bh1position)$);
     
 
         \begin{scope}[
+            % rotate around z=\Polarization,
+            % rotate around x=\Inclination,
             canvas is xy plane at z=0,
         ]
-        %  -- Orbit
-    	\draw[
-            dashed,
-            gray,
-            thick,
-            opacity=0.5,
-            yscale=1-\eccentricity,
-        ] (center) circle(0.5*\binaryseparation cm);
-    	
-        % -- Black Hole 1
-        \node[
-            fill,
-            circle,
-            minimum size={\massone*\BHsizepersolmass},
-            inner sep=0pt,
-            label={below:\textcolor{spincolor}{$m_1$}},
-        ] at (bh1position) {};
-    
-        \draw[
-            ->,
-            thick,
-            spincolor,
-        ] (bh1position) -- ++(spin1) node[above]{$\vec{S}_1$};
-    
+            %  -- Orbit
+            \draw[
+                dashed,
+                gray,
+                thick,
+                opacity=0.5,
+                yscale=1-\eccentricity,
+            ] (center) circle(0.5*\binaryseparation cm);
+            
+            % -- Black Hole 1
+            \node[
+                fill,
+                circle,
+                minimum size={\massone*\BHsizepersolmass},
+                inner sep=0pt,
+                label={below:\textcolor{spincolor}{$m_1$}},
+            ] at (bh1position) {};
         
-        % -- Black Hole 2
-        \node[
-            fill,
-            circle,
-            minimum size={\masstwo*\BHsizepersolmass},
-            inner sep=0pt,
-            label={below right:\textcolor{spincolor}{$m_2$}},
-        ] at (bh2position) {};
-    	
-    	\draw[
-            ->,
-            thick,
-            spincolor,
-        ] (bh2position) -- ++(spin2) node[right]{$\vec{S}_2$};
-
-    
-        % -- Total Angular Momenta
-    	\draw[
-            ->,
-            thick,
-            spincolor,
-        ] (center) -- ++(totalspin) node[right]{$\vec{S}$};
+            \draw[
+                ->,
+                thick,
+                spincolor,
+            ] (bh1position) -- ++(spin1) node[above]{$\vec{S}_1$};
         
-    	\draw[
-            ->,
-            thick,
-            lcolor,
-        ] (center) -- (angularmomentum) node[left]{$\vec{L}_N$};
-     
-    	\draw[
-            ->,
-            thick,
-            jcolor,
-        ] (center) -- (totalangularmomentum) node[left]{$\vec{J}$};
+            
+            % -- Black Hole 2
+            \node[
+                fill,
+                circle,
+                minimum size={\masstwo*\BHsizepersolmass},
+                inner sep=0pt,
+                label={below right:\textcolor{spincolor}{$m_2$}},
+            ] at (bh2position) {};
+    	
+            \draw[
+                ->,
+                thick,
+                spincolor,
+            ] (bh2position) -- ++(spin2) node[right]{$\vec{S}_2$};
 
-    
-        % -- centerbined spin quantities
-    	\draw[
-            ->,
-            thick,
-            chicolor,
-        ] (center) -- ++(chieff) node[below left]{$\chi_\mathrm{eff}$};
-     
-    	\draw[
-            ->,
-            thick,
-            chicolor,
-        ] (center) -- ++(chip) node[below]{$\chi_p$};
+            
+            % -- Stuff related to spins and angular momentum
+            \draw[
+                ->,
+                thick,
+                lcolor,
+                ] (center) -- (angularmomentum) node[left]{$\vec{L}_N$};
+                
+            \ifthenelse{\equal{\ShowCombinedQuantities}{true}}{
+                \draw[
+                    ->,
+                    thick,
+                    spincolor,
+                ] (center) -- ++(totalspin) node[right]{$\vec{S}$};
+                
+                \draw[
+                    ->,
+                    thick,
+                    jcolor,
+                ] (center) -- (totalangularmomentum) node[left]{$\vec{J}$};
+
+                            \draw[
+                    ->,
+                    thick,
+                    chicolor,
+                ] (center) -- ++(chieff) node[below left]{$\chi_\mathrm{eff}$};
+            
+                \draw[
+                    ->,
+                    thick,
+                    chicolor,
+                ] (center) -- ++(chip) node[below]{$\chi_p$};
+            }{}
         \end{scope}
 
     \end{scope}
