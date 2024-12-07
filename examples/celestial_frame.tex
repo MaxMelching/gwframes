@@ -1,0 +1,34 @@
+\documentclass[
+	preview,
+	border=1pt
+]{standalone}
+
+\usepackage{subfig}
+
+\usepackage{../cbc_binary_tikz}
+\usepackage{../earth_tikz}
+\usepackage{../cbc_frames_tikz}
+
+
+
+\begin{document}
+\begin{figure}
+	\begin{tikzpicture}
+	    \drawframes[%
+	        inclination=10,
+	        polarization=-42,
+	        ra=75,
+	        dec=25,
+	        eccentricity=0.4,
+	        signalframeaxes=false,
+	        signalframehelperlines=false,
+	        signalframeangles=false,
+	        sourceframeaxes=false,
+	        sourceframehelperlines=false,
+	        earthradius=1.1,
+	    ];
+	\end{tikzpicture}
+
+	\caption{Celestial Frame $(x'')^\mu$ and position of a binary in it.}
+\end{figure}
+\end{document}

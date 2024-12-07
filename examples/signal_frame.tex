@@ -1,0 +1,31 @@
+\documentclass[
+	preview,
+	border=1pt
+]{standalone}
+
+
+\usepackage{subfig}
+
+\usepackage{../cbc_binary_tikz}
+\usepackage{../earth_tikz}
+\usepackage{../cbc_frames_tikz}
+
+
+
+\begin{document}
+\begin{figure}
+	\centering
+	
+	\begin{tikzpicture}
+	    \drawframes[%
+	        inclination=30,
+	        longascnodes=-24,
+	        phiref=42,
+	        eccentricity=0.5,
+	        showcelestialframe=false,
+	    ];
+	\end{tikzpicture}
+
+	\caption{Signal Frame $(x')^\mu$ vs.~Source Frame $x^\mu$. The three Euler angles are $\mathrm{longAscNodes} = -24 = \Omega - 90, \iota = 30, \phi_\mathrm{ref} = 42$.}
+\end{figure}
+\end{document}

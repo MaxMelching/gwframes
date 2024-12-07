@@ -1,0 +1,95 @@
+\documentclass[
+	preview,
+	border=1pt,
+]{standalone}
+
+
+\usepackage{subfig}
+
+\usepackage{../cbc_binary_tikz}
+\usepackage{../earth_tikz}
+\usepackage{../cbc_frames_tikz}
+
+
+
+\begin{document}
+\begin{figure}
+	\centering
+
+	\subfloat[$\psi = 0$]{
+		\begin{tikzpicture}
+		    \drawframes[%
+		        inclination=0,
+		        polarization=0,
+		        longascnodes=-90,
+		        ra=0,
+		        dec=90,
+		        eccentricity=0.5,
+		        binarydistance=1.5,
+		        signalframehelperlines=false,
+		        sourceframeaxes=false,
+		        distancelabel=,
+		        lineofsightlabel=,
+		        earthtilt=24,
+		    ];
+		\end{tikzpicture}
+	}
+	%
+	\subfloat[$\psi = \pi/4$]{
+		\begin{tikzpicture}
+		    \drawframes[%
+		        inclination=0,
+		        polarization=45,
+		        longascnodes=-90,
+		        ra=0,
+		        dec=90,
+		        eccentricity=0.5,
+		        binarydistance=1.5,
+		        signalframehelperlines=false,
+		        sourceframeaxes=false,
+		        distancelabel=,
+		        lineofsightlabel=,
+		    ];
+		\end{tikzpicture}
+	}
+	
+	\subfloat[$\psi = \pi/2$]{
+		\begin{tikzpicture}
+		    \drawframes[%
+		        inclination=0,
+		        polarization=90,
+		        longascnodes=-90,
+		        ra=0,
+		        dec=90,
+		        eccentricity=0.5,
+		        binarydistance=1.5,
+		        signalframehelperlines=false,
+		        sourceframeaxes=false,
+		        distancelabel=,
+		        lineofsightlabel=,
+		    ];
+		\end{tikzpicture}
+	}
+	%
+	\subfloat[$\psi = \pi$]{
+		\begin{tikzpicture}
+		    \drawframes[%
+		        inclination=0,
+		        polarization=180,
+		        longascnodes=-90,
+		        ra=0,
+		        dec=90,
+		        eccentricity=0.5,
+		        binarydistance=1.5,
+		        signalframehelperlines=false,
+		        sourceframeaxes=false,
+		        distancelabel=,
+		        lineofsightlabel=,
+		    ];
+		\end{tikzpicture}
+	}
+	
+	
+	\caption{Impact Of Polarization Angle}
+\end{figure}
+\end{document}

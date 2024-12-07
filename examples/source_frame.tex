@@ -1,0 +1,25 @@
+\documentclass[
+    border=1pt,
+]{standalone}
+
+\usepackage{../cbc_binary_tikz}
+
+
+\begin{document}
+\begin{tikzpicture}
+    \drawbinary[%
+        mass1=36,
+        mass2=20,
+        spin1x=0.1,
+        spin1y=0.4,
+        spin1z=1.0,
+        spin2x=-0.1,
+        spin2y=0.1,
+        spin2z=0.5,
+        polarization=-12,
+        eccentricity=0.5,
+        binaryseparation=7,
+        % showcombinedquantities=false,
+    ];
+\end{tikzpicture}
+\end{document}
