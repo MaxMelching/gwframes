@@ -3,3 +3,15 @@
 *.log
 
 *.synctex.gz
+
+*.fls
+
+*.fdb_latexmk
+
+*.nav
+
+*.out
+
+*.snm
+
+*.toc
