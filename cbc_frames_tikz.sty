@@ -24,15 +24,33 @@
     backgrounds,
 }
 
-% -- Define custom layers keyword. Credit: https://tex.stackexchange.com/questions/20425/z-level-in-tikz
-\tikzset{layer/.style={%
-    execute at begin scope={\pgfonlayer{#1}},
-    execute at end scope={\endpgfonlayer}
-}}
 
-
-
-\tikzset{>={Stealth[inset=0,angle'=27]}}
+\tikzset{
+    >={Stealth[inset=0,angle'=27]},
+    % -- Define custom layers keyword. Credit: https://tex.stackexchange.com/questions/20425/z-level-in-tikz
+    layer/.style={%
+        execute at begin scope={\pgfonlayer{#1}},
+        execute at end scope={\endpgfonlayer}
+    },
+    coordinate axis/.style={
+        ->,
+        black,
+        semithick,
+        layer=axes,
+    },
+    angle/.style={
+        fill,
+        opacity=0.42,
+        layer=angles,
+    },
+    helper lines/.style={
+        thick,
+        gray!70!black,
+        dotted,
+        opacity=0.5,
+        layer=BackGround,
+    },
+}
 
 
 \definecolor{persianblue}{rgb}{0.11, 0.22, 0.73}
@@ -81,6 +99,7 @@
         dec = 0,
         eccentricity = 0,
         axislen = 3,
+        axislabelpad = 0.1,  % Corresponds to 10% of \AxisLen
         binaryscalefactor = 0.5, % Radius of each binary component, in multiples of axislen
         binarydistance = 3, % Distance of binary from earth, in multiples of axislen
         uselayers = false,
@@ -112,6 +131,7 @@
     dec/.estore in = \Dec,
     eccentricity/.estore in = \eccentricity,
 	axislen/.estore in = \AxisLen,
+    axislabelpad/.estore in = \AxisLabelPad,
 	binaryscalefactor/.estore in = \binaryscalefactor,
     binarydistance/.estore in = \binarydistance,
     uselayers/.estore in = \UseLayers,
@@ -189,7 +209,7 @@
         \begin{scope}[
             tdplot_screen_coords,
             shift={(earthpos)}, % To be future proof, does nothing right now
-            layer=BackGround
+            layer=BackGround,
         ]
             \drawearth;
             
@@ -208,8 +228,8 @@
                     % \tikzset{laser/.style={black, fill=black!40}}
                     \tikzset{laser/.style={line width=0pt, black, outer color=black!40, inner color=black!32}}
                     \tikzset{ray/.style={thick, red}}%, arrow inside}} % Inner and outer color does not work
-                    \tikzset{mirror/.style={line width=0pt,, outer color=black!50, inner color=white}}
-                    \tikzset{photodiode/.style={line width=0pt,, outer color=orange!90!black, inner color=orange!40}}
+                    \tikzset{mirror/.style={line width=0pt, outer color=black!50, inner color=white}}
+                    \tikzset{photodiode/.style={line width=0pt, outer color=orange!90!black, inner color=orange!40}}
                     
                     
                     \coordinate (BS) at (0, 0);
@@ -230,12 +250,7 @@
                     \draw[photodiode, shift={(PD)}] (0.3, 0) -- (-0.3, 0) arc[start angle=-180, end angle=0, radius=0.3cm-0.1pt] {};
                 \end{scope}
             }{}
-        
         \end{scope}
-        
-        % \tikzmath{\earthwidth=2*\RE;}
-        % \node at (earthpos) {\includegraphics[width=\earthwidth cm, angle=\angE]{pictures/binaries/earth-1303628_1920.png}};
-        % -- I like how it looks, but could be a little too dark overall
 
         
         \begin{scope}[
@@ -245,22 +260,13 @@
             \coordinate (xdoubleprimetip) at (\AxisLen, 0, 0);
             \coordinate (ydoubleprimetip) at (0, \AxisLen, 0);
             \coordinate (zdoubleprimetip) at (0, 0, \AxisLen);
-                
-            \draw[
-                layer=axes,
-                ->,
-            ] (earthpos) -- ++(xdoubleprimetip) node[anchor=north]{$x''$};
-            
-            \draw[
-                layer=axes,
-                ->,
-            ] (earthpos) -- ++(ydoubleprimetip) node[anchor=north]{$y''$};
-            
-            \draw[
-                layer=axes,
-                ->,
-            ] (earthpos) -- ++(zdoubleprimetip) node[anchor=south]{$z''$};
-        
+
+            \draw[coordinate axis] (earthpos) -- ++(xdoubleprimetip) node[pos=1+\AxisLabelPad]{$x''$};
+
+            \draw[coordinate axis] (earthpos) -- ++(ydoubleprimetip) node[pos=1+\AxisLabelPad]{$y''$};
+
+            \draw[coordinate axis] (earthpos) -- ++(zdoubleprimetip) node[pos=1+\AxisLabelPad]{$z''$};
+
 
             \ifthenelse{\equal{\CelestialFrameAngles}{true}}{
                 % -- Visualization of dec
@@ -271,11 +277,7 @@
                         rotate around x=-90,
                         deccolor,
                     ]
-                        \draw[
-                            layer=angles,
-                            fill,
-                            opacity=0.42,
-                        ] (earthpos) -- (\AxisLen, 0, 0) arc (0:-\Dec:\AxisLen);
+                        \draw[angle] (earthpos) -- (\AxisLen, 0, 0) arc (0:-\Dec:\AxisLen);
                         
                         \draw[
                             layer=angles,
@@ -292,11 +294,7 @@
                     \begin{scope}[
                         racolor,
                     ]
-                        \draw[
-                            layer=angles,
-                            fill,
-                            opacity=0.42,
-                        ] (earthpos) -- (\AxisLen, 0, 0) arc (0:\Ra:\AxisLen);
+                        \draw[angle] (earthpos) -- (\AxisLen, 0, 0) arc (0:\Ra:\AxisLen);
                         
                         \draw[
                             layer=angles,
@@ -349,20 +347,11 @@
         \coordinate (zprimetip) at (0, 0, \AxisLen);
 
         \ifthenelse{\equal{\SignalFrameAxes}{true}}{
-            \draw[
-                layer=axes,
-                ->,
-            ] (binaryposition) -- (xprimetip) node[anchor=north]{$x'$};
-            
-            \draw[
-                layer=axes,
-                ->,
-            ] (binaryposition) -- (yprimetip) node[anchor=north]{$y'$};
-            
-            \draw[
-                layer=axes,
-                ->,
-            ] (binaryposition) -- (zprimetip) node[anchor=south]{$z'$};
+            \draw[coordinate axis] (binaryposition) -- (xprimetip) node[pos=1+\AxisLabelPad]{$x'$};
+
+            \draw[coordinate axis] (binaryposition) -- (yprimetip) node[pos=1+\AxisLabelPad]{$y'$};
+
+            \draw[coordinate axis] (binaryposition) -- (zprimetip) node[pos=1+\AxisLabelPad]{$z'$};
         }{}
 
         
@@ -371,13 +360,7 @@
             \begin{scope}[
                 canvas is xy plane at z=0,
             ]
-                \draw[
-                    layer=BackGround,
-                    thick,
-                    gray!70!black,
-                    dotted,
-                    opacity=0.5,
-                ] (0.0, 0.0, 0.0) circle(\AxisLen cm) {};
+                \draw[helper lines] (0.0, 0.0, 0.0) circle(\AxisLen cm) {};
             \end{scope}
         }{}
 
@@ -443,20 +426,11 @@
                 \coordinate (ztip) at (0, 0, \AxisLen);
 
                 \ifthenelse{\equal{\SourceFrameAxes}{true}}{
-                    \draw[
-                        layer=axes,
-                        ->,
-                    ] (binaryposition) -- (xtip) node[anchor=north]{$x$};
-            
-                    \draw[
-                        layer=axes,
-                        ->,
-                    ] (binaryposition) -- (ytip) node[anchor=north]{$y$};
-                    
-                    \draw[
-                        layer=axes,
-                        ->,
-                    ] (binaryposition) -- (ztip) node[anchor=south]{$z$};
+                    \draw[coordinate axis] (binaryposition) -- (xtip) node[pos=1+\AxisLabelPad]{$x$};
+
+                    \draw[coordinate axis] (binaryposition) -- (ytip) node[pos=1+\AxisLabelPad]{$y$};
+
+                    \draw[coordinate axis] (binaryposition) -- (ztip) node[pos=1+\AxisLabelPad]{$z$};
                 }{}
         
 
@@ -470,11 +444,7 @@
                             rotate around y=-90,
                             inccolor,
                         ]
-                            \draw[
-                                layer=angles,
-                                fill,
-                                opacity=0.42,
-                            ] (binaryposition) -- (zprimetip) arc (0:-\Inclination:\AxisLen);
+                            \draw[angle] (binaryposition) -- (zprimetip) arc (0:-\Inclination:\AxisLen);
                             
                             \draw[
                                 layer=angles,
@@ -490,12 +460,7 @@
                     % -- Visualization of PhiRef
                     \ifnum\PhiRef=0
                     \else
-                        \draw[
-                            layer=angles,
-                            fill,
-                            opacity=0.42,
-                            phirefcolor,
-                        ] (binaryposition) -- (xtip) arc (0:-\PhiRef:\AxisLen);
+                        \draw[angle, phirefcolor] (binaryposition) -- (xtip) arc (0:-\PhiRef:\AxisLen);
                         
                         \draw[
                             layer=angles,
@@ -512,13 +477,7 @@
                     \begin{scope}[
                         canvas is xy plane at z=0,
                     ]
-                        \draw[
-                            layer=BackGround,
-                            thick,
-                            gray!70!black,
-                            dotted,
-                            opacity=0.5,
-                        ] (0.0, 0.0, 0.0) circle(\AxisLen cm) {};
+                        \draw[helper lines] (0.0, 0.0, 0.0) circle(\AxisLen cm) {};
                     \end{scope}
                 }{}
             \end{scope}
@@ -532,7 +491,7 @@
             % ] (binaryposition) -- (\AxisLen, 0, 0) node[anchor=north]{AscNodeLabel};
             % -- TODO: maybe move label to other place if longascnodes = 0? Then this here coincides with y'
             % -- -> better solution: elongate line that indicates ascending node
-            ] (binaryposition) -- (1.25*\AxisLen, 0, 0) node[anchor=north]{\AscNodeLabel};
+            ] (binaryposition) -- (1.25*\AxisLen, 0, 0) node[pos=1+\AxisLabelPad]{\AscNodeLabel};
         }{}
         \end{scope}
 
@@ -540,13 +499,9 @@
             % -- Visualization of LongAscOmega
             \ifnum\LongAscNodes=-90 % Doing this with LongAscOmega = 0 does not work, must be due to use of \def
             \else
-                \draw[
-                    layer=angles,
-                    fill,
-                    opacity=0.42,
-                    longasccolor,
-                ] (binaryposition) -- (xprimetip) arc (0:\LongAscOmega:\AxisLen);
-                % ] (binaryposition) -- (xprimetip) arc (0:-\LongAscOmega:\AxisLen);
+                \draw[angle, longasccolor] (binaryposition) -- (xprimetip) arc
+                (0:\LongAscOmega:\AxisLen);
+                % (0:-\LongAscOmega:\AxisLen);
                 
                 \draw[
                     layer=angles,
@@ -561,13 +516,9 @@
             \ifthenelse{\equal{\ShowCelestialFrame}{true}}{
                 \ifnum\Polarization=0
                 \else
-                    \draw[
-                        layer=angles,
-                        fill,
-                        opacity=0.42,
-                        polcolor,
-                    ] (binaryposition) -- (xprimetip) arc (0:-\Polarization:\AxisLen); % Counter-clockwise aroud z'
-                    % ] (binaryposition) -- (xprimetip) arc (0:\Polarization:\AxisLen); % Clockwise aroud z'
+                    \draw[angle, polcolor] (binaryposition) -- (xprimetip) arc
+                    (0:-\Polarization:\AxisLen); % Counter-clockwise aroud z'
+                    % (0:\Polarization:\AxisLen); % Clockwise aroud z'
                     
                     \draw[
                         layer=angles,

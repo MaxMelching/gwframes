@@ -1,6 +1,7 @@
 \documentclass[
 	preview,
-	border=1pt,
+	% tikz,  % In principle best thing you can do, but does not work with subfigures
+	border=3pt,
 ]{standalone}
 
 
@@ -15,7 +16,7 @@
 	\centering
 
 	\subfloat[$\psi = 0$]{
-		\begin{tikzpicture}
+		\begin{tikzpicture}[scale=0.75]
 		    \drawframes[%
 		        inclination=0,
 		        polarization=0,
@@ -34,7 +35,7 @@
 	}
 	%
 	\subfloat[$\psi = \pi/4$]{
-		\begin{tikzpicture}
+		\begin{tikzpicture}[scale=0.75]
 		    \drawframes[%
 		        inclination=0,
 		        polarization=45,
@@ -52,7 +53,7 @@
 	}
 	
 	\subfloat[$\psi = \pi/2$]{
-		\begin{tikzpicture}
+		\begin{tikzpicture}[scale=0.75]
 		    \drawframes[%
 		        inclination=0,
 		        polarization=90,
@@ -70,7 +71,7 @@
 	}
 	%
 	\subfloat[$\psi = \pi$]{
-		\begin{tikzpicture}
+		\begin{tikzpicture}[scale=0.75]
 		    \drawframes[%
 		        inclination=0,
 		        polarization=180,

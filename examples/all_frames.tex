@@ -1,32 +1,27 @@
 \documentclass[
-	preview,
-	border=1pt
+	tikz,
+	border=3pt,
 ]{standalone}
 
-\usepackage{subfig}
 
-\usepackage{cbc_binary_tikz}
-\usepackage{earth_tikz}
 \usepackage{cbc_frames_tikz}
 
 
 
 \begin{document}
-\begin{figure}
-	\begin{tikzpicture}
-	    \drawframes[%
-	        inclination=16,
-	        polarization=60,
-	        longascnodes=16,
-	        phiref=20,
-	        ra=-110,
-	        dec=16,
-	        eccentricity=0.5,
-	        binarydistance=4,
-	        earthradius=1.4,
-	    ];
-	\end{tikzpicture}
+\begin{tikzpicture}
+	\drawframes[%
+		inclination=16,
+		polarization=60,
+		longascnodes=16,
+		phiref=20,
+		ra=-110,
+		dec=16,
+		eccentricity=0.5,
+		binarydistance=4,
+		earthradius=1.4,
+	];
 
-	\caption{Comparison Of All Frames: Celestial Frame $(x'')^\mu$, Signal Frame $(x')^\mu$, Source Frame $x^\mu$.}
-\end{figure}
+	\node[text width=12cm, align=center] at (-4,-2) {Comparison Of All Frames: Celestial Frame $(x'')^\mu$, Signal Frame $(x')^\mu$, Source Frame $x^\mu$.};
+\end{tikzpicture}
 \end{document}
