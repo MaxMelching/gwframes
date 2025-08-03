@@ -33,8 +33,6 @@ claim to be an expert in this, but here are two ways I have found to make this w
    `\usepackage{../cbc_frames_tikz}` works too (despite some complaints by LaTeX).
    This is also the preferred way in case you are using Overleaf.
 
-1. setting the `TEXINPUTS` variable in your shell, so that the `pdflatex` command
-   can find the `.sty` files in this respository. You can do this manually, or
-   by running the `install.sh` script that comes with this repository, which does
-   this in bash. To confirm that it worked, restart your shell and run
-   `kpsewhich cbc_frames_tikz.sty` (should yield this repository).
+1. for a recipe on how to make the package available on your whole system,
+   please refer to the instructions on
+   [my GitHub](https://github.com/MaxMelching/latex_package_install).
