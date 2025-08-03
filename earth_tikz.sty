@@ -53,8 +53,10 @@
 
 \tikzset{
     >={Stealth[inset=0,angle'=27]},
-    /pgf/fpu/install only={reciprocal}, % for higher precision in "random steps"
-    wrinkle/.style={rounded corners=0.6*\RE pt,decorate,decoration={random steps,segment length=\RE pt,amplitude=0.6*\RE pt}}, % For higher RE, things have to be changed here as well. So increasing scale is better solution -> ah, scale does not really help... So we do manually again
+    % /pgf/fpu/install only={reciprocal}, % for higher precision in "random steps"
+%    wrinkle/.style={rounded corners=0.6,decorate,decoration={random steps,segment length=0.5,amplitude=0.6}}, % For higher RE, things have to be changed here as well. So increasing scale is better solution -> ah, scale does not really help... So we do manually again
+%	wrinkle/.style={rounded corners=0.2pt,decorate,decoration={random steps,segment length=1pt,amplitude=0.2pt}},  % Original, also error now
+	wrinkle/.style={},
     land/.style={ultra thin,draw=#1!40!black,rotate=-\angE,postaction={fill=#1},wrinkle},
     mysmallarrow/.style={-{Latex[length=3,width=2,bend]},red,line width=0.4,line cap=round},
 }
