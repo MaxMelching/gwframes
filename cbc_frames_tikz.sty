@@ -84,6 +84,7 @@
 \def\AscNodeLabel{$\ascnode$}
 % \def\OmegaLabel{$\Omega = \pi/2 + \mathrm{longAscNodes}$}
 \def\OmegaLabel{$\Omega$}
+\def\AzimuthalProjectionLabel{$\pi/2 -$\PhiRefLabel}
 
 
 \pgfkeys{
@@ -99,7 +100,7 @@
         dec = 0,
         eccentricity = 0,
         axislen = 3,
-        axislabelpad = 0.1,  % Corresponds to 10% of \AxisLen
+        axislabelpad = 0.12,  % Corresponds to 10% of \AxisLen
         binaryscalefactor = 0.5, % Radius of each binary component, in multiples of axislen
         binarydistance = 3, % Distance of binary from earth, in multiples of axislen
         uselayers = false,
@@ -120,6 +121,7 @@
         earthtilt = 0,
         showifo = true,
         ifoarmlength = 2,
+        showazimuthalangle = false,
     },
     mass1/.estore in = \massone,
     mass2/.estore in = \masstwo,
@@ -160,6 +162,7 @@
     sourceframehelperlines/.estore in = \SourceFrameHelperlines,
     showifo/.estore in = \ShowIFO,
     ifoarmlength/.estore in = \armlength,
+    showazimuthalangle/.estore in = \ShowAzimuthalAngle,
 }
 
 \def\LongAscOmega{90 + \LongAscNodes}
@@ -283,7 +286,12 @@
                             layer=angles,
                             ->,
                             thick,
-                        ] (earthpos) ++(\AxisLen, 0, 0) arc (0:-\Dec:\AxisLen) node[midway, right] {\DecLabel};
+                        ] (earthpos) ++(\AxisLen, 0, 0) arc (0:-\Dec:\AxisLen);
+                        
+                        \draw[
+                            layer=angles,
+                            draw=none,
+                        ] (earthpos) ++({(1+\AxisLabelPad)*\AxisLen}, 0, 0) arc (0:-\Dec:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\DecLabel};
                     \end{scope}
                 \fi
             
@@ -300,7 +308,12 @@
                             layer=angles,
                             ->,
                             thick,
-                        ] (earthpos) ++(\AxisLen, 0, 0) arc (0:\Ra:\AxisLen) node[midway, below] {\RaLabel};
+                        ] (earthpos) ++(\AxisLen, 0, 0) arc (0:\Ra:\AxisLen);
+                        
+                        \draw[
+                            layer=angles,
+                            draw=none,
+                        ] (earthpos) ++({(1+\AxisLabelPad)*\AxisLen}, 0, 0) arc (0:\Ra:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\RaLabel};
                     \end{scope}
                 \fi
             }{}
@@ -450,9 +463,12 @@
                                 layer=angles,
                                 ->,
                                 thick,
-                            % ] (binarypos) ++(\AxisLen, 0, 0) arc (0:\Inclination:\AxisLen) node[midway, above] {$\InclinationLabel$}; % Then we can omit x rotation in case of rotated binary system
-                            % ] (binaryposition) ++(\AxisLen, 0, 0) arc (0:-\Inclination:\AxisLen) node[midway, above] {$\InclinationLabel$};
-                            ] (zprimetip) arc (0:-\Inclination:\AxisLen) node[midway, above] {\InclinationLabel};
+                            ] (zprimetip) arc (0:-\Inclination:\AxisLen);
+
+                            \draw[
+                                layer=angles,
+                                draw=none,
+                            ] (${(1+\AxisLabelPad)}*(zprimetip)$) arc (0:-\Inclination:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\InclinationLabel};
                         \end{scope}
                     \fi
         
@@ -467,8 +483,56 @@
                             <-,
                             thick,
                             phirefcolor,
-                        ] (binaryposition) ++(xtip) arc (0:-\PhiRef:\AxisLen) node[midway, right] {\PhiRefLabel};
+                        ] (binaryposition) ++(xtip) arc (0:-\PhiRef:\AxisLen);
+
+                        \draw[
+                            layer=angles,
+                            draw=none,
+                            phirefcolor,
+                        ] (binaryposition) ++(${(1+\AxisLabelPad)}*(xtip)$) arc (0:-\PhiRef:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\PhiRefLabel};
                     \fi
+
+                    \ifthenelse{\equal{\ShowAzimuthalAngle}{true}}{
+                        % -- Visualize phiN from Fig. 1 of https://www.nature.com/articles/s41550-025-02632-5
+                        \begin{scope}[
+                            layer=angles,
+                            rotate around z=90-\PhiRef,
+                        ]
+                            \begin{scope}[
+                                rotate around x=90,
+                            ]
+                                \draw[
+                                    distancecolor,
+                                    thick,
+                                    dashed,
+                                ] (binaryposition) --++ (\AxisLen, 0, 0) arc (0:90-\Inclination:\AxisLen);
+                                % ] (binaryposition) --++ (\AxisLen, 0, 0) arc (0:90:\AxisLen);  % More accurate. But not sure if that makes too crowded (goes right through inclination)
+                            \end{scope}
+                            
+                            % \draw[
+                            %     distancecolor,
+                            %     thick,
+                            %     dashed,
+                            % ] (binaryposition) --++ (\AxisLen, 0, 0) -- (0, 0, \AxisLen);
+                            % -- Straight line for connection. Don't think I like more than arc
+                            
+                            \draw[
+                                distancecolor,
+                                angle,
+                            ] (binaryposition) --++ (\AxisLen, 0, 0) arc (0:-90+\PhiRef:\AxisLen);
+                            
+                            \draw[
+                                <-,
+                                thick,
+                                distancecolor,
+                            ] (binaryposition) ++ (\AxisLen, 0, 0) arc (0:-90+\PhiRef:\AxisLen);
+
+                            \draw[
+                                draw=none,
+                                distancecolor,
+                            ] (binaryposition) ++ ({(1+\AxisLabelPad)*\AxisLen}, 0, 0) arc (0:-90+\PhiRef:{(1+\AxisLabelPad)*\AxisLen}) node[midway, sloped] {\AzimuthalProjectionLabel};
+                        \end{scope}
+                    }{}
                 }{}
     
     
@@ -508,8 +572,15 @@
                     ->,
                     thick,
                     longasccolor,
-                ] (binaryposition) ++(xprimetip) arc (0:\LongAscOmega:\AxisLen) node[midway, below] {\OmegaLabel};
-                % ] (binaryposition) ++(xprimetip) arc (0:-\LongAscOmega:\AxisLen) node[midway, below] {\OmegaLabel};
+                ] (binaryposition) ++(xprimetip) arc (0:\LongAscOmega:\AxisLen);
+                % ] (binaryposition) ++(xprimetip) arc (0:-\LongAscOmega:\AxisLen);
+                
+                \draw[
+                    layer=angles,
+                    draw=none,
+                    longasccolor,
+                ] (binaryposition) ++(${(1+\AxisLabelPad)}*(xprimetip)$) arc (0:\LongAscOmega:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\OmegaLabel};
+                % ] (binaryposition) ++(${(1+\AxisLabelPad)}*(xprimetip)$) arc (0:-\LongAscOmega:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\OmegaLabel};
             \fi
     
             % -- Visualization of polarization
@@ -525,8 +596,15 @@
                         <-,
                         thick,
                         polcolor,
-                    ] (binaryposition) ++(xprimetip) arc (0:-\Polarization:\AxisLen) node[midway, below] {\PolarizationLabel}; % Counter-clockwise around z'
-                    % ] (binaryposition) ++(xprimetip) arc (0:\Polarization:\AxisLen) node[midway, below] {\PolarizationLabel}; % Clockwise aroud z'
+                    ] (binaryposition) ++(xprimetip) arc (0:-\Polarization:\AxisLen); % Counter-clockwise around z'
+                    % ] (binaryposition) ++(xprimetip) arc (0:\Polarization:\AxisLen); % Clockwise aroud z'
+
+                    \draw[
+                        layer=angles,
+                        draw=none,
+                        polcolor,
+                    ] (binaryposition) ++(${(1+\AxisLabelPad)}*(xprimetip)$) arc (0:-\Polarization:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\PolarizationLabel}; % Counter-clockwise around z'
+                    % ] (binaryposition) ++(${(1+\AxisLabelPad)}*(xprimetip)$) arc (0:\Polarization:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\PolarizationLabel}; % Clockwise around z'
                 \fi
             }{}
         }{}
@@ -553,7 +631,7 @@
             \ifnum\Ra<0
                 \draw[
                     ->,
-                ] (earthpos) -- (binaryposition) node[midway, above]{\LineOfSightLabel};
+                ] (earthpos) -- (binaryposition) node[midway, sloped, above]{\LineOfSightLabel};
             
                 \ifx\DistanceLabel\empty
 	            \else
@@ -562,14 +640,14 @@
 	                    decoration={
 	                        brace,
 	                        amplitude=10pt,
-	                        % mirror, -> with typical orientation of the frames, not mirroring is actually better
+	                        % mirror, -> now handled by if clause
 	                    },
-	                ] (earthpos) -- (binaryposition) node[midway, yshift=-18pt]{\DistanceLabel};
+	                ] (earthpos) -- (binaryposition) node[midway, sloped, below=10]{\DistanceLabel};
 	            \fi
             \else
                 \draw[
                     ->,
-                ] (earthpos) -- (binaryposition) node[midway, below]{\LineOfSightLabel};
+                ] (earthpos) -- (binaryposition) node[midway, sloped, below]{\LineOfSightLabel};
                 
                 \ifx\DistanceLabel\empty
                	\else
@@ -579,7 +657,7 @@
 	                        brace,
 	                        amplitude=10pt,
 	                    },
-	                ] (earthpos) -- (binaryposition) node[midway, yshift=18pt]{\DistanceLabel};
+	                ] (earthpos) -- (binaryposition) node[midway, sloped, above=10]{\DistanceLabel};
 	            \fi
             \fi
 
