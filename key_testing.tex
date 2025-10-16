@@ -1,0 +1,279 @@
+\documentclass{article}
+\usepackage{pgf}
+\usepackage{pgfkeys}
+
+
+% \pgfkeys{
+%   myfamily/.is family, myfamily,
+%   inclination/.code = {
+%     % #1 should be {0, show=true}
+%     % \pgfkeysalso{
+%     %   /myfamily/inclination/value/.initial = 0,
+%     %   /myfamily/inclination/show/.initial = true,
+%     % }
+%     % Parse the subkeys now:
+%     \pgfkeysalso{/myfamily/inclination/.cd, #1}
+%     % % Do something with the result:
+%     % Inclination value = \pgfkeysvalueof{/myfamily/inclination/value},
+%     % show = \pgfkeysvalueof{/myfamily/inclination/show}.
+%   },
+%   inclination/value/.initial = 0,
+%   inclination/show/.initial = true,
+% }
+
+% -- Above is V1, only works when key-value pairs are passed
+
+
+
+% \makeatletter
+% \pgfkeys{
+%   /myfamily/.is family, /myfamily,
+%   % main handler
+%   inclination/.code = {%
+%     % #1 is e.g. "30, show=true"
+%     \def\temp{#1}%
+%     % Extract everything up to first comma
+%     \pgfutil@in@,{#1}%
+%     \ifpgfutil@in@%
+%       % Has a comma: split into first and rest
+%       \pgfutil@split@first@comma#1\pgf@stop
+%     \else
+%       % No comma: only a single value
+%       \def\pgf@temp@first{#1}%
+%       \def\pgf@temp@rest{}%
+%     \fi
+%     % Now we have \pgf@temp@first = numeric value
+%     % and \pgf@temp@rest = " show=true" or empty
+
+%     % store the numeric part
+%     \pgfkeyssetvalue{/myfamily/inclination/value}{\pgf@temp@first}%
+%     % parse rest if present
+%     \ifx\pgf@temp@rest\@empty\else
+%       \pgfkeysalso{/myfamily/inclination/.cd, \pgf@temp@rest}%
+%     \fi
+%     % for demonstration
+%     % \edef\InclinationValue{\pgfkeysvalueof{/myfamily/inclination/value}}%
+%     % \edef\InclinationShow{\pgfkeysvalueof{/myfamily/inclination/show}}%
+%     % \typeout{Inclination: value=\InclinationValue, show=\InclinationShow}%
+%   },
+%   inclination/value/.initial = 0,
+%   inclination/show/.initial = true,
+% }
+
+% % helper macro: split at first comma
+% \long\def\pgfutil@split@first@comma#1,#2\pgf@stop{%
+%   \def\pgf@temp@first{#1}%
+%   \def\pgf@temp@rest{#2}%
+% }
+% \makeatother
+
+% -- Of course it doesn't work
+
+
+% \makeatletter
+
+% \pgfkeys{
+%   /myfamily/.is family, /myfamily,
+%   % main inclination handler
+%   inclination/.code = {%
+%     % case 1: keyword syntax — contains '='
+%     \pgfutil@in@={#1}%
+%     \ifpgfutil@in@%
+%       % parse as subkeys, e.g. {value=45, show=true}
+%       \pgfkeysalso{/myfamily/inclination/.cd, #1}%
+%     \else
+%       % case 2: plain numeric argument
+%       \pgfkeyssetvalue{/myfamily/inclination/value}{#1}%
+%     \fi
+%     % for demonstration:
+%     % \edef\InclinationValue{\pgfkeysvalueof{/myfamily/inclination/value}}%
+%     % \edef\InclinationShow{\pgfkeysvalueof{/myfamily/inclination/show}}%
+%     % \typeout{Inclination: value=\InclinationValue, show=\InclinationShow}%
+%   },
+%   % subkeys (defaults)
+%   inclination/value/.initial = 0,
+%   inclination/show/.initial = true,
+% }
+
+% \makeatother
+
+
+% -- Most robust version I think and good flexibility at the same time. 
+
+
+
+% --- Define the macro ---
+% \makeatletter
+% \newcommand*\pgfkeysdefvalueorkeys[2]{%
+%   \pgfkeys{#1/#2/.code={%
+%     \pgfutil@in@={##1}%
+%     \ifpgfutil@in@%
+%       \pgfkeysalso{#1/#2/.cd, ##1}%
+%     \else
+%       \pgfkeyssetvalue{#1/#2/value}{##1}%
+%     \fi
+%   }}
+% }
+% \makeatother
+
+% % --- Define your family and subkeys ---
+% \pgfkeys{
+%   /myfamily/.is family, /myfamily,
+%   inclination/value/.initial = 0,
+%   inclination/show/.initial = true,
+%   speed/value/.initial = 0,
+%   speed/unit/.initial = kmh,
+% }
+
+% % --- Declare both "inclination" and "speed" as flexible keys ---
+% \pgfkeysdefvalueorkeys{/myfamily}{inclination}
+% \pgfkeysdefvalueorkeys{/myfamily}{speed}
+
+% -- Trying to make it reusable -> works
+
+
+% \makeatletter
+% \newcommand*\pgfkeysdefvalueorkeys[2]{%
+%   #1/#2/.code={%
+%     \pgfutil@in@={##1}%
+%     \ifpgfutil@in@%
+%       \pgfkeysalso{#1/#2/.cd, ##1}%
+%     \else
+%       \pgfkeyssetvalue{#1/#2/value}{##1}%
+%     \fi
+%   }
+% }
+% \makeatother
+
+% % --- Define your family and subkeys ---
+% \pgfkeys{
+%   /myfamily/.is family, /myfamily,
+%   \pgfkeysdefvalueorkeys{/myfamily}{inclination},
+%   \pgfkeysdefvalueorkeys{/myfamily}{speed},
+%   inclination/value/.initial = 0,
+%   inclination/show/.initial = true,
+%   speed/value/.initial = 0,
+%   speed/unit/.initial = kmh,
+% }
+
+
+% \makeatletter
+% % \newcommand*\pgfkeysdefvalueorkeys[2]{%
+% \def\pgfkeysdefvalueorkeys#1#2{%
+%     \pgfutil@in@={##1}%
+%     \ifpgfutil@in@%
+%       \pgfkeysalso{#1/#2/.cd, ##1}%
+%     \else
+%       \pgfkeyssetvalue{#1/#2/value}{##1}%
+%     \fi
+% }
+
+% % --- Define your family and subkeys ---
+% \pgfkeys{
+%   /myfamily/.is family, /myfamily,
+%   /myfamily/inclination/.code={\pgfkeysdefvalueorkeys{/myfamily}{inclination}},
+%   /myfamily/speed/.code={\pgfkeysdefvalueorkeys{/myfamily}{speed}},
+%   inclination/value/.initial = 0,
+%   inclination/show/.initial = true,
+%   speed/value/.initial = 0,
+%   speed/unit/.initial = kmh,
+% }
+% \makeatother
+
+
+% -- Reusable V2 -> not working yet -> actually, I think there is no way to make it work...
+
+
+
+% \makeatletter
+% % Define a "smart value or subkeys" handler for the given full path.
+% % Usage: \pgfkeysdefvalueorkeys{/myfamily/inclination}
+% \newcommand*\pgfkeysdefvalueorkeys[1]{%
+%   \pgfkeyssetvalue{/myfamily/#1/.code}{%
+%     \pgfutil@in@={##1}%
+%     \ifpgfutil@in@%
+%       % if value contains '=', treat it as subkeys
+%       \pgfkeysalso{#1/.cd, ##1}%
+%     \else
+%       % otherwise, treat as simple value
+%       \pgfkeyssetvalue{#1/value}{##1}%
+%     \fi
+%   }%
+% }
+
+% \pgfkeys{
+%   /myfamily/.is family, /myfamily,
+
+%   % define each key so it installs its own handler
+% %   inclination/.code = {\pgfkeysdefvalueorkeys{/myfamily/inclination}},
+%   inclination/.code = {\pgfkeysdefvalueorkeys{inclination}},
+%   speed/.code       = {\pgfkeysdefvalueorkeys{/myfamily/speed}},
+
+%   % subkey defaults
+%   inclination/value/.initial = 0,
+%   inclination/show/.initial  = true,
+%   speed/value/.initial       = 0,
+%   speed/unit/.initial        = kmh,
+% }
+% \makeatother
+
+
+
+
+\makeatletter
+\newcommand*\pgfkeysdefvalueorkeys[2]{%
+  \pgfkeys{#1/#2/.code={%
+    \pgfutil@in@={##1}%
+    \ifpgfutil@in@%
+      % -- Multiple key-value pairs given, parse them
+      \pgfkeysalso{#1/#2/.cd, ##1}%
+    \else
+      % -- Only one value given, set it to "value" subkey
+      \pgfkeyssetvalue{#1/#2/value}{##1}%
+    \fi
+  }}
+}
+
+% --- Define your family and subkeys ---
+\pgfkeys{
+  /myfamily/.is family, /myfamily,
+  inclination/value/.initial = 0,
+  inclination/show/.initial = true,
+  speed/value/.initial = 0,
+  speed/unit/.initial = kmh,
+  %   
+  inclination/value/.estore in = \Inclination@Value,
+  inclination/show/.estore in = \Inclination@Show,
+}
+
+% --- Declare both "inclination" and "speed" as flexible keys ---
+\pgfkeysdefvalueorkeys{/myfamily}{inclination}
+\pgfkeysdefvalueorkeys{/myfamily}{speed}
+\makeatother
+
+
+% -- Some customization to working code
+
+
+
+\begin{document}
+
+% \pgfkeys{/myfamily/inclination={value=45, show=true}}
+% \pgfkeys{/myfamily/inclination={45, show=true}}
+% \pgfkeys{/myfamily/inclination=50}
+\pgfkeys{/myfamily/inclination={value=45, show=false}}
+
+
+
+% Do something with the result:
+Inclination value = \pgfkeysvalueof{/myfamily/inclination/value},
+show = \pgfkeysvalueof{/myfamily/inclination/show}.
+
+\makeatletter
+Inclination value 2 = \Inclination@Value,
+Inclination show 2 = \Inclination@Show.
+\makeatother
+
+% -- With the reworked code, only the commands have a value because we tell pgf to store the values in the commands rather than in the corresponding pgf key
+
+\end{document}
