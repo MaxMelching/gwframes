@@ -87,7 +87,7 @@
 
 % -- Some convenience features
 \usepackage{siunitx}
-\RequirePackage{wasysym}  % For \ascnode symbol
+\usepackage{wasysym}  % For \ascnode symbol
 
 
 % -- Some custom commands
@@ -98,13 +98,23 @@
 }
 
 
+\usepackage{xspace}
+\def\tikzfancy{Ti\textit{k}z\xspace}
+
+
 
 \begin{document}
 
-% \chapter*{Documentation Of \code{GWFrames}}
-{\rmfamily\Huge\bfseries
+
+
+{\noindent\rmfamily\Huge\bfseries
     Documentation Of \code{GWFrames}
 }
+
+\begin{center}
+    \textbf{Contact:} consider opening a \href{https://github.com/MaxMelching/minkowski_diagram/issues}{GitHub issue} or find me at \href{mailto:m-melching@web.de}{m-melching@web.de}.
+\end{center}
+
 
 For the most recent version of all the files, see \url{https://github.com/MaxMelching/gw_frames}.
 This file was compiled on \today{} and the corresponding git commit hash
@@ -154,139 +164,187 @@ using \verb|\def\<parameter>Label{<input>}|. A practical example would be
 \verb|\def\OmegaLabel{$\Omega = \pi/2 + \mathrm{longAscNodes}$}|.
 
 
-        \subsection{\texttt{cbc\_frames\_tikz}}
 
+        \subsection{\texttt{cbc\_frames\_tikz}}
 This is a list of all keyword arguments (note that all angles are expected to
 be given in degrees):
 \begin{itemize}
-    \item \code{mass1}: mass of the first compact object, determining its
-    size. Ten solar masses correspond to a size of $\SI{0.35}{\centi\metre}$.
-    
+    \item \code{mass1}: Mass of the first compact object, determining its size. Ten solar masses correspond to a size of $\SI{0.35}{\centi\metre}$.
+
     \defaultval{$20$}
 
 
-    \item \code{mass2}: mass of the second compact object, determining its
-    size. Ten solar masses correspond to a size of $\SI{0.35}{\centi\metre}$.
-    
+    \item \code{mass2}: Mass of the second compact object, determining its size. Ten solar masses correspond to a size of $\SI{0.35}{\centi\metre}$.
+
     \defaultval{$20$}
-    
-    
-    \item \code{longascnodes}: determines the angle between $x$-axis of the
-    signal frame and the ascending node $\ascnode$, this angle being
-    $\Omega = 90 + \mathrm{longAscNodes}$.
-    
+
+
+    \item \code{inclination}: Inclination between orbital plane and sky plane. This rotation is about the ascending node $\ascnode$.
+
     \defaultval{$0$}
 
 
-    \item \code{inclination}: inclination between orbital plane and sky plane.
-    This rotation is about the ascending node $\ascnode$.
-    
+    \item \code{polarization}: Polarization angle, i.e. rotation of the $x$-axis in the sky plane (about the line of sight, which coincides with the $z$-axis of the signal frame).
+
     \defaultval{$0$}
-    
-    
-    \item \code{phiref}: reference angle $\phi_\mathrm{ref}$ that determines
-    the rotation between ascending node and $x$-axis of the signal frame
-    (about the inclined $z$-axis of the signal frame).
-    
+
+
+    \item \code{longascnodes}: Determines the ngle between $x$-axis of the signal frame and the ascending node $\ascnode$, which is $\Omega = 90 + \mathrm{longAscNodes}$.
+
     \defaultval{$0$}
-    
-    
+
+
+    \item \code{phiref}: Reference angle $\phi_\mathrm{ref}$ that determines the rotation between ascending node and $x$-axis of the signal frame (about the inclined $z$-axis of the signal frame).
+
+    \defaultval{$0$}
+
+
     \item \code{ra}
-    
-    
+
+    \defaultval{$0$}
+
+
     \item \code{dec}
-    
-    
-    \item \code{polarization}: polarization angle, i.e. rotation of the $x$-axis
-    in the sky plane (about the line of sight).
+
+    \defaultval{$0$}
 
 
-    \item \code{eccentricity}
+    \item \code{eccentricity}: Determines the circularity of the binary black hole orbit
+
+    \defaultval{$0$}
 
 
-    \item \code{axislen}: length of the axes in each coordinate system.
-    
-    \defaultval{$\SI{3}{\centi\metre}$}
+    \item \code{axislen}: Length of the axes of each coordinate system.
+
+    % \defaultval{$\SI{3}{\centi\metre}$}
+    \defaultval{$3$}
 
 
-    \item \code{binaryscalefactor}: distance of binary companions, in multiples
-    of the axis length \code{axislen}.
-    
-    \defaultval{$1$}
+    \item \code{axislabelpad}: How far from the axis label is drawn from the axis arrow tip, in multiples of \code{axislen}.
+
+    \defaultval{$0.12$}
 
 
-    \item \code{binarydistance}: distance of binary center of mass from Earth,
-    in multiples of the axis length \code{axislen}.
-    
+    \item \code{binaryscalefactor}: Distance of binary companions, in multiples of \code{axislen}.
+
+    \defaultval{$0.5$}
+
+
+    \item \code{binarydistance}: distance of binary center of mass from Earth, in multiples of the axis length \code{axislen}.
+
     \defaultval{$3$}
 
 
     % \item \code{uselayers}
 
 
-    \item \code{showcelestialframe}: determines whether to show the celestial frame.
-    Has precedence over the other commands for styling of celestialframe, such
-    as \code{celestialframeaxes}.
+    \item \code{showcelestialframe}: Whether to show the celestial frame. Has precedence over the other commands for the styling of the celestial frame, such as \code{celestialframeaxes}.
 
     \defaultval{true}
 
 
-    \item \code{celestialframeaxes}
-
-
-    \item \code{celestialframehelperlines}
-
-
-    \item \code{celestialframeangles}
-
-
-    \item \code{showlineofsight}
-
-
-    \item \code{showsignalframe}: determines whether to show the signal frame.
-    Has precedence over the other commands for styling of signalframe, such
-    as \code{signalframeaxes}.
+    \item \code{celestialframeaxes}: Whether to show the celestial frame axes.
 
     \defaultval{true}
 
 
-    \item \code{signalframeaxes}
+    \item \code{celestialframehelperlines}: Whether to show the celestial frame helper lines.
+
+    \defaultval{true}
 
 
-    \item \code{signalframehelperlines}
+    \item \code{celestialframeangles}: Whether to visualize the celestial frame angles.
+
+    \defaultval{true}
 
 
-    \item \code{signalframeangles}
+    \item \code{showlineofsight}: Whether to visualize the line of sight (and accordingly, the luminosity distance).
+
+    \defaultval{true}
 
 
-    \item \code{showsourceframe}
+    \item \code{showsignalframe}: Whether to show the signal frame. Has precedence over the other commands for the styling of the signal frame, such as \code{signalframeaxes}.
+
+    \defaultval{true}
 
 
-    \item \code{sourceframeaxes}
+    \item \code{signalframeaxes}: Whether to show the signal frame axes.
+
+    \defaultval{true}
 
 
-    \item \code{sourceframehelperlines}
+    \item \code{signalframehelperlines}: Whether to show the signal frame helper lines.
+
+    \defaultval{true}
 
 
-    \item \code{earthradius}
+    \item \code{signalframeangles}: Whether to visualize the signal frame angles.
+
+    \defaultval{true}
 
 
-    \item \code{earthtilt}: 
+    \item \code{showsourceframe}. Whether to show the source frame. Has precedence over the other commands for the styling of the source frame, such as \code{sourceframeaxes}.
+
+    \defaultval{true}
 
 
-    \item \code{showifo}: whether to draw an interferometer on Earth or not.
+    \item \code{sourceframeaxes}: Whether to show the source frame axes.
+
+    \defaultval{true}
 
 
-    \item \code{ifoarmlength}: arm length of the interferometer.
-    
-    \defaultval{$\SI{2}{\centi\metre}$}
+    \item \code{sourceframehelperlines}: Whether to show the source frame helper lines.
+
+    \defaultval{true}
+
+
+    \item \code{earthradius}: Radius of the Earth that is drawn as part of the celestial frame. Passed on the \code{radius} argument of \code{earth\_tikz}.
+
+    \defaultval{$1.25$}
+
+
+    \item \code{earthtilt}: Tilt of the Earth that is drawn as part of the celestial frame. Passed on the \code{radius} argument of \code{earth\_tikz}.
+
+    \defaultval{$0$}
+
+
+    \item \code{showifo}: Whether to draw an interferometer on Earth.
+
+    \defaultval{true}
+
+
+    \item \code{ifoarmlength}: Arm length of the interferometer.
+
+    % \defaultval{$\SI{2}{\centi\metre}$}
+    \defaultval{$2$}
+
+
+    \item \code{showazimuthalangle}: Determines if a specific azimuthal angle used in [this](https://www.nature.com/articles/s41550-025-02632-5) paper is visualized.
+
+    \defaultval{false}
 \end{itemize}
 
 
+
         \subsection{\texttt{cbc\_binary\_tikz}}
+\begin{itemize}
+    \item 
+\end{itemize}
+
 
 
         \subsection{\texttt{earth\_tikz}}
+\begin{itemize}
+    \item \code{radius}: Radius of the Earth
+    
+    \defaultval{$1$}
+
+
+    \item \code{tilt}: Tilt of the Earth
+    
+    \defaultval{$0$}
+\end{itemize}
+
 
 
 \end{document}
