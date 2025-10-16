@@ -221,15 +221,21 @@
 
 
 \makeatletter
-\newcommand*\pgfkeysdefvalueorkeys[2]{%
-  \pgfkeys{#1/#2/.code={%
+\newcommand*\pgfkeysdefvalueorkeys[1]{%
+\pgfkeys{#1/.code={%
+%   \pgfkeys{/myfamily/.cd, #1/.code={%
     \pgfutil@in@={##1}%
     \ifpgfutil@in@%
       % -- Multiple key-value pairs given, parse them
-      \pgfkeysalso{#1/#2/.cd, ##1}%
+      \pgfkeysalso{#1/.cd, ##1}%
+    %   \pgfkeysalso{/myfamily/.cd, #1/.cd, ##1}%
     \else
       % -- Only one value given, set it to "value" subkey
-      \pgfkeyssetvalue{#1/#2/value}{##1}%
+    %   \pgfkeyssetvalue{#1/value}{##1}%
+    %   \pgfkeysalso{#1/.cd, #1/value=##1}%
+    %   \pgfkeysalso{/myfamily/.cd, #1/value=##1}%
+      \pgfkeysalso{#1/value=##1}%
+    %   \def#1@Value{##1}
     \fi
   }}
 }
@@ -237,18 +243,32 @@
 % --- Define your family and subkeys ---
 \pgfkeys{
   /myfamily/.is family, /myfamily,
-  inclination/value/.initial = 0,
-  inclination/show/.initial = true,
+  default/.style = {
+    /myfamily/.cd,
+    test=1,
+    % inclination=0,
+    % speed=0,
+    /myfamily/.cd,
+    inclination={value=0,show=true},
+    /myfamily/.cd,
+    speed={value=0,unit=kmh},
+    /myfamily/.cd,
+    moretest=2,
+  },
+  test/.initial = 1,
+%   inclination/value/.initial = 0,
+%   inclination/show/.initial = true,
   speed/value/.initial = 0,
   speed/unit/.initial = kmh,
-  %   
+  %
   inclination/value/.estore in = \Inclination@Value,
   inclination/show/.estore in = \Inclination@Show,
+  moretest/.initial = 2,
 }
 
 % --- Declare both "inclination" and "speed" as flexible keys ---
-\pgfkeysdefvalueorkeys{/myfamily}{inclination}
-\pgfkeysdefvalueorkeys{/myfamily}{speed}
+\pgfkeysdefvalueorkeys{/myfamily/inclination}
+\pgfkeysdefvalueorkeys{/myfamily/speed}
 \makeatother
 
 
@@ -258,10 +278,46 @@
 
 \begin{document}
 
+\pgfkeys{/myfamily, default}
+
+% \pgfkeys{
+% \pgfkeysalso{
+%     /myfamily,
+%     test=1,
+%     % inclination=0,
+%     % speed=0,
+%     inclination={value=0,show=true},
+%     speed={value=0,show=true},
+%     moretest=2,
+% }
+
+% \pgfkeys{
+% % \pgfkeysalso{
+%     /myfamily,
+%     test=1,
+%     /myfamily/.cd,
+%     inclination={value=0,show=true},
+%     /myfamily/.cd,
+%     speed={value=0,unit=kmh},
+%     /myfamily/.cd,
+%     moretest=2,
+% }
+
+
+% \makeatletter
+% Inclination value 2 = \Inclination@Value,
+% Inclination show 2 = \Inclination@Show.
+% \makeatother
+
+
+
 % \pgfkeys{/myfamily/inclination={value=45, show=true}}
 % \pgfkeys{/myfamily/inclination={45, show=true}}
-% \pgfkeys{/myfamily/inclination=50}
+\pgfkeys{/myfamily/inclination=50}
 \pgfkeys{/myfamily/inclination={value=45, show=false}}
+
+
+\pgfkeys{/myfamily, test=3, moretest=4}
 
 
 
@@ -275,5 +331,9 @@ Inclination show 2 = \Inclination@Show.
 \makeatother
 
 % -- With the reworked code, only the commands have a value because we tell pgf to store the values in the commands rather than in the corresponding pgf key
+
+
+test value = \pgfkeysvalueof{/myfamily/test},
+moretest = \pgfkeysvalueof{/myfamily/moretest}.
 
 \end{document}

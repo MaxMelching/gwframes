@@ -93,12 +93,19 @@
 	default/.style = {
         mass1 = 20,
         mass2 = 10,
+        /frames/.cd,
         inclination = 0,
+        /frames/.cd,
         polarization = 0,
+        /frames/.cd,
         longascnodes = 0,
+        /frames/.cd,
         phiref = 0,
+        /frames/.cd,
         ra = 0,
+        /frames/.cd,
         dec = 0,
+        /frames/.cd,
         eccentricity = 0,
         axislen = 3,
         axislabelpad = 0.12,  % Corresponds to 10% of \AxisLen
@@ -124,50 +131,169 @@
         showazimuthalangle = false,
     },
     mass1/.estore in = \massone,
+    mass1/.initial = 20,
     mass2/.estore in = \masstwo,
-	inclination/.estore in = \Inclination,
-	polarization/.estore in = \Polarization,
-    longascnodes/.estore in = \LongAscNodes,
-    phiref/.estore in = \PhiRef,
-    ra/.estore in = \Ra,
-    dec/.estore in = \Dec,
-    eccentricity/.estore in = \eccentricity,
-	axislen/.estore in = \AxisLen,
-    axislabelpad/.estore in = \AxisLabelPad,
-	binaryscalefactor/.estore in = \binaryscalefactor,
-    binarydistance/.estore in = \binarydistance,
-    uselayers/.estore in = \UseLayers,
-    earthradius/.estore in = \RE,
-    earthtilt/.estore in = \angE,
-    showcelestialframe/.estore in = \ShowCelestialFrame,
-    celestialframeaxes/.estore in = \CelestialFrameAxes,
-    celestialframehelperlines/.estore in = \CelestialFrameHelperlines,
-    celestialframeangles/.estore in = \CelestialFrameAngles,
-    showlineofsight/.estore in = \ShowLineOfSight,
+    mass2/.initial = 10,
+    % 
+    % inclination/value/.estore in = \Inclination@Value,
+    inclination/value/.estore in = \Inclination,
+    inclination/value/.initial = 0,
+    inclination/show/.estore in = \Inclination@Show,
+    inclination/show/.initial = true,
+    % 
+    polarization/value/.estore in = \Polarization,
+    polarization/value/.initial = 0,
+    polarization/show/.estore in = \Polarization@Show,
+    polarization/show/.initial = true,
+    % 
+    longascnodes/value/.estore in = \LongAscNodes,
+    longascnodes/value/.initial = 0,
+    longascnodes/show/.estore in = \LongAscNodes@Show,
+    longascnodes/show/.initial = true,
+    % 
+    phiref/value/.estore in = \PhiRef,
+    phiref/value/.initial = 0,
+    phiref/show/.estore in = \PhiRef@Show,
+    phiref/show/.initial = true,
+    % 
+    ra/value/.estore in = \Ra,
+    ra/value/.initial = 0,
+    ra/show/.estore in = \Ra@Show,
+    ra/show/.initial = true,
+    % 
+    dec/value/.estore in = \Dec,
+    dec/value/.initial = 0,
+    dec/show/.estore in = \Dec@Show,
+    dec/show/.initial = true,
+    % 
+    inclinationlabel/.estore in = \InclinationLabel,
+    polarizationlabel/.estore in = \PolarizationLabel,
     ralabel/.estore in = \RaLabel,
     declabel/.estore in = \DecLabel,
-    polarizationlabel/.estore in = \PolarizationLabel,
     distancelabel/.estore in = \DistanceLabel,
     lineofsightlabel/.estore in = \LineOfSightLabel,
-    showsignalframe/.estore in = \ShowSignalFrame,
-    signalframeaxes/.estore in = \SignalFrameAxes,
-    signalframehelperlines/.estore in = \SignalFrameHelperlines,
-    signalframeangles/.estore in = \SignalFrameAngles,
-    inclinationlabel/.estore in = \InclinationLabel,
     omegalabel/.estore in = \OmegaLabel,
     phireflabel/.estore in = \PhiRefLabel,
     ascnodelabel/.estore in = \AscNodeLabel,
+    % 
+    showlineofsight/.estore in = \ShowLineOfSight,
+    % 
+    eccentricity/.estore in = \eccentricity,
+    eccentricity/.initial = \eccentricity,
+    % 
+    axislen/.estore in = \AxisLen,
+    axislen/.initial = 3,
+    % 
+    axislabelpad/.estore in = \AxisLabelPad,
+    axislabelpad/.initial = 0.12,
+    % 
+    binaryscalefactor/.estore in = \binaryscalefactor,
+    binaryscalefactor/.initial = 0.5,
+    % 
+    binarydistance/.estore in = \binarydistance,
+    binarydistance/.initial = 3,
+    % 
+    uselayers/.estore in = \UseLayers,
+    uselayers/.initial = false,
+    % 
+    % celestialframe={
+    %     show=true,
+    %     angles=true,
+    %     axes=true,
+    %     helperlines=true,
+    % }
+    % 
+    % 
+    % 
+    earthradius/.estore in = \RE,
+    earthradius/.initial = 1.25,
+    % 
+    earthtilt/.estore in = \angE,
+    earthtilt/.initial = 0,
+    % 
+    showcelestialframe/.estore in = \ShowCelestialFrame,
+    showcelestialframe/.initial = true,
+    % 
+    celestialframeaxes/.estore in = \CelestialFrameAxes,
+    celestialframeaxes/.initial = true,
+    % 
+    celestialframehelperlines/.estore in = \CelestialFrameHelperlines,
+    celestialframehelperlines/.initial = true,
+    % 
+    celestialframeangles/.estore in = \CelestialFrameAngles,
+    celestialframeangles/.initial = true,
+    % 
+    showsignalframe/.estore in = \ShowSignalFrame,
+    showsignalframe/.initial = true,
+    % 
+    signalframeaxes/.estore in = \SignalFrameAxes,
+    signalframeaxes/.initial = true,
+    % 
+    signalframehelperlines/.estore in = \SignalFrameHelperlines,
+    signalframehelperlines/.initial = true,
+    % 
+    signalframeangles/.estore in = \SignalFrameAngles,
+    signalframeangles/.initial = true,
+    % 
     showsourceframe/.estore in = \ShowSourceFrame,
+    showsourceframe/.initial = true,
+    % 
     sourceframeaxes/.estore in = \SourceFrameAxes,
+    sourceframeaxes/.initial = true,
+    % 
     sourceframehelperlines/.estore in = \SourceFrameHelperlines,
+    sourceframehelperlines/.initial = true,
+    % 
     showifo/.estore in = \ShowIFO,
+    showifo/.initial = true,
+    % 
     ifoarmlength/.estore in = \armlength,
+    ifoarmlength/.initial = 2,
+    % 
     showazimuthalangle/.estore in = \ShowAzimuthalAngle,
+    showazimuthalangle/.initial = false,
 }
 
 \def\LongAscOmega{90 + \LongAscNodes}
 
 \def\BHsizepersolmass{1/20*0.7 cm} % So that 20 solmass BH has size of 0.7 cm
+
+
+% -- Define a pgfkeys handler
+% \newcommand*\pgfkeysdefvalueorkeys[2]{%
+%   \pgfkeys{#1/#2/.code={%
+%     \pgfutil@in@={##1}%
+%     \ifpgfutil@in@%
+%       % -- Multiple key-value pairs given, parse them
+%       \pgfkeysalso{#1/#2/.cd, ##1}%
+%       \pgfkeys{#1/.cd}%
+%     \else
+%       % -- Only one value given, set it to "value" subkey
+%       \pgfkeyssetvalue{#1/#2/value}{##1}%
+%     \fi
+%   }}
+% }
+\newcommand*\pgfkeysdefvalueorkeys[1]{%
+  \pgfkeys{#1/.code={%
+    \pgfutil@in@={##1}%
+    \ifpgfutil@in@%
+      % -- Multiple key-value pairs given, parse them
+      \pgfkeysalso{#1/.cd, ##1}%
+    \else
+      % -- Only one value given, set it to "value" subkey
+    %   \pgfkeyssetvalue{#1/value}{##1}%
+      \pgfkeysalso{#1/value=##1}%
+    \fi
+  }}
+}
+
+\pgfkeysdefvalueorkeys{/frames/inclination}
+\pgfkeysdefvalueorkeys{/frames/polarization}
+\pgfkeysdefvalueorkeys{/frames/longascnodes}
+\pgfkeysdefvalueorkeys{/frames/phiref}
+\pgfkeysdefvalueorkeys{/frames/ra}
+\pgfkeysdefvalueorkeys{/frames/dec}
+
 
 
 % -- NOTE: reason that rotation has no effect sometimes is due to named coordinates
