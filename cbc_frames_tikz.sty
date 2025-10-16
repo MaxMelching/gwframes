@@ -75,6 +75,7 @@
 % -- Define default labels via commands, avoiding errors when setting
 % -- pgfkeys with expressions that have to expanded (e.g. contain curly
 % -- brackets or an "=")
+\def\InclinationLabel{$\iota$}
 \def\RaLabel{$\alpha$}
 \def\DecLabel{$\delta$}
 \def\PolarizationLabel{$\psi$}
@@ -108,12 +109,11 @@
         celestialframeaxes = true,
         celestialframehelperlines = true,
         celestialframeangles = true,
-        celestialframelineofsight = true,
+        showlineofsight = true,
         showsignalframe = true,
         signalframeaxes = true,
         signalframehelperlines = true,
         signalframeangles = true,
-        inclinationlabel = $\iota$,
         showsourceframe = true,
         sourceframeaxes = true,
         sourceframehelperlines = true,
@@ -143,7 +143,7 @@
     celestialframeaxes/.estore in = \CelestialFrameAxes,
     celestialframehelperlines/.estore in = \CelestialFrameHelperlines,
     celestialframeangles/.estore in = \CelestialFrameAngles,
-    celestialframelineofsight/.estore in = \ShowLineOfSight,
+    showlineofsight/.estore in = \ShowLineOfSight,
     ralabel/.estore in = \RaLabel,
     declabel/.estore in = \DecLabel,
     polarizationlabel/.estore in = \PolarizationLabel,
@@ -614,11 +614,10 @@
         \end{scope}
     }{}
 
-
-	\ifthenelse{\equal{\ShowCelestialFrame}{true}}{
+	\ifthenelse{\equal{\ShowCelestialFrame}{true} \and \equal{\ShowLineOfSight}{true}}{
         % -- Visualization of relation between celestial and signal frame        
         \begin{scope}[
-            layer=angles,
+            % layer=angles,
             distancecolor,
             thick,
         ]
@@ -631,6 +630,7 @@
             \ifnum\Ra<0
                 \draw[
                     ->,
+                    layer=angles,
                 ] (earthpos) -- (binaryposition) node[midway, sloped, above]{\LineOfSightLabel};
             
                 \ifx\DistanceLabel\empty
@@ -642,6 +642,7 @@
 	                        amplitude=10pt,
 	                        % mirror, -> now handled by if clause
 	                    },
+                        layer=angles,
 	                ] (earthpos) -- (binaryposition) node[midway, sloped, below=10]{\DistanceLabel};
 	            \fi
             \else
@@ -657,6 +658,7 @@
 	                        brace,
 	                        amplitude=10pt,
 	                    },
+                        layer=angles,
 	                ] (earthpos) -- (binaryposition) node[midway, sloped, above=10]{\DistanceLabel};
 	            \fi
             \fi
