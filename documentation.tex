@@ -126,18 +126,18 @@ is \code{\gitrevision{}} (or, in case you need the full one, \code{\HEAD{}}\hspa
 
 This repository contains three packages, each providing one command:
 \begin{itemize}
-    \item \code{cbc\_frames\_tikz} (command \verb|\drawframes|): plots a
+    \item \code{cbc\_frames\_tikz} (command \code{\string\drawframes}): plots a
     selection of source frame, signal frame, and celestial frame that are
     used to describe gravitational waves emitted by compact binary coalescences.
     
     
-    \item \code{cbc\_binary\_tikz} (command \verb|\drawbinary|): plots
+    \item \code{cbc\_binary\_tikz} (command \code{\string\drawbinary}): plots
     intrinsic parameters of a system of two compact binary objects. Adapted
     from code originally written by Jannik Mielke.
     
     
-    \item \code{earth\_tikz} (command \verb|\drawearth|): plots one side of
-    the Earth. Mainly intended for usage through \verb|\drawframes|. Most of
+    \item \code{earth\_tikz} (command \code{\string\drawearth}): plots one side of
+    the Earth. Mainly intended for usage through \code{\string\drawframes}. Most of
     the credit for this code goes to Izaak Neutelings, who provided it on
     \url{https://tikz.net/astronomy_seasons/}.
 \end{itemize}
@@ -159,9 +159,9 @@ Several examples of how to use this package are shown in the examples folder.
 \emph{Note} that certain values cannot be passed to pgfkeys, which is
 particularly relevant for declaration of labels. If you encounter an issue of
 this kind, look up the command that this key is stored in (typically something
-like \verb|\<parameter>Label|), and manually set the command. This can be done
-using \verb|\def\<parameter>Label{<input>}|. A practical example would be
-\verb|\def\OmegaLabel{$\Omega = \pi/2 + \mathrm{longAscNodes}$}|.
+like \code{\string\<parameter>Label}), and manually set the command. This can be done
+using \code{\string\def\string\<parameter>Label{<input>}}. A practical example would be
+\code{\string\def\string\OmegaLabel\{\$\string\Omega = \string\pi/2 + \string\mathrm{longAscNodes}\$\}}.
 
 
 
@@ -189,7 +189,7 @@ be given in degrees):
     \defaultval{$0$}
 
 
-    \item \code{longascnodes}: Determines the ngle between $x$-axis of the signal frame and the ascending node $\ascnode$, which is $\Omega = 90 + \mathrm{longAscNodes}$.
+    \item \code{longascnodes}: Determines the angle between $x$-axis of the signal frame and the ascending node $\ascnode$, which is $\Omega = 90 + \mathrm{longAscNodes}$.
 
     \defaultval{$0$}
 
@@ -199,12 +199,12 @@ be given in degrees):
     \defaultval{$0$}
 
 
-    \item \code{ra}
+    \item \code{ra}: Angle between Earth's $x$-axis and the projection of the line of sight onto Earth's equatorial plane.
 
     \defaultval{$0$}
 
 
-    \item \code{dec}
+    \item \code{dec}: Angle between line of sight and Earth's equatorial plane.
 
     \defaultval{$0$}
 
@@ -328,8 +328,72 @@ be given in degrees):
 
         \subsection{\texttt{cbc\_binary\_tikz}}
 \begin{itemize}
-    \item 
+    \item \code{mass1}: Mass of the first binary component, in solar masses.
+    
+    \defaultval{$20$}
+
+
+    \item \code{mass2}: Mass of the second binary component, in solar masses.
+    
+    \defaultval{$10$}
+
+
+    \item \code{spin1x}: $x$-component of the dimensionless spin of the first binary component.
+    
+    \defaultval{$0$}
+
+
+    \item \code{spin1y}: $y$-component of the dimensionless spin of the first binary component.
+    
+    \defaultval{$0$}
+
+
+    \item \code{spin1z}: $z$-component of the dimensionless spin of the first binary component.
+    
+    \defaultval{$0$}
+
+
+    \item \code{spin2x}: $x$-component of the dimensionless spin of the second binary component.
+    
+    \defaultval{$0$}
+
+
+    \item \code{spin2y}: $y$-component of the dimensionless spin of the second binary component.
+    
+    \defaultval{$0$}
+
+
+    \item \code{spin2z}: $z$-component of the dimensionless spin of the second binary component.
+    
+    \defaultval{$0$}
+
+
+	\item \code{inclination}: Inclination of the orbital plane with respect to the $xy$-plane. (The orbital plane is the plane in which the two binary components orbit each other.)
+	
+    \defaultval{$0$}
+
+
+	\item \code{polarization}: Angle or rotation in the orbital plane.
+	
+    \defaultval{$0$}
+
+
+    \item \code{eccentricity}: How eccentric the binary orbit is.
+    
+    \defaultval{$0$}
+
+
+    \item \code{binaryseparation}: How far the binary components are separated.
+    
+    \defaultval{$6$}
+
+
+    \item \code{showcombinedquantities}: Whether to show quantities like the effective or precessing spin, which are combinations of the properties of both binary components.
+    
+    \defaultval{true}
 \end{itemize}
+
+Other quantities of interest are the commands \code{\string\BHsizepersolmass} and \code{\string\UnitSpinSize}, which determine the size of black holes and spins in the plot.
 
 
 
