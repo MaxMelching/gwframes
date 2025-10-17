@@ -75,151 +75,172 @@
 % -- Define default labels via commands, avoiding errors when setting
 % -- pgfkeys with expressions that have to expanded (e.g. contain curly
 % -- brackets or an "=")
-\def\InclinationLabel{$\iota$}
-\def\RaLabel{$\alpha$}
-\def\DecLabel{$\delta$}
-\def\PolarizationLabel{$\psi$}
-\def\DistanceLabel{$D_L$}
+\def\Inclination@Label{$\iota$}
+\def\Ra@Label{$\alpha$}
+\def\Dec@Label{$\delta$}
+\def\Polarization@Label{$\psi$}
+\def\Distance@Label{$D_L$}
 \def\LineOfSightLabel{$\vec{N}$}
-\def\PhiRefLabel{$\phi_\mathrm{ref}$}
-\def\AscNodeLabel{$\ascnode$}
-% \def\OmegaLabel{$\Omega = \pi/2 + \mathrm{longAscNodes}$}
-\def\OmegaLabel{$\Omega$}
-\def\AzimuthalProjectionLabel{$\pi/2 -$\PhiRefLabel}
+\def\PhiRef@Label{$\phi_\mathrm{ref}$}
+\def\AscNode@Label{$\ascnode$}
+% \def\Omega@Label{$\Omega = \pi/2 + \mathrm{longAscNodes}$}  % Error from the curly brackets...
+\def\Omega@Label{$\Omega$}
+\def\AzimuthalProjectionLabel{$\pi/2 -$\PhiRef@Label}
 
 
 \pgfkeys{
 	/frames/.is family, /frames,
 	default/.style = {
-        mass1 = 20,
-        mass2 = 10,
-        % /frames/.cd,
+        binary = {%
+            mass1 = 20,
+            mass2 = 10,
+            eccentricity = 0,
+            scalefactor = 1,
+            % distance = 3,
+        },
+        distance = {%
+            value = 3,
+            show = true,
+        },
         inclination = 0,
-        % /frames/.cd,
         polarization = 0,
-        % /frames/.cd,
         longascnodes = 0,
-        % /frames/.cd,
         phiref = 0,
-        % /frames/.cd,
         ra = 0,
-        % /frames/.cd,
         dec = 0,
-        % /frames/.cd,
-        eccentricity = 0,
+        % -- No need to give defaults for labels, are all set above
         axislen = 3,
         axislabelpad = 0.12,  % Corresponds to 12% of \AxisLen
-        binaryscalefactor = 1, % Distance between binary components, in multiples of axislen
-        binarydistance = 3, % Distance of binary from earth, in multiples of axislen
         uselayers = false,
-        showcelestialframe = true,
-        celestialframeaxes = true,
-        celestialframehelperlines = true,
-        celestialframeangles = true,
-        showlineofsight = true,
-        showsignalframe = true,
-        signalframeaxes = true,
-        signalframehelperlines = true,
-        signalframeangles = true,
-        showsourceframe = true,
-        sourceframeaxes = true,
-        sourceframehelperlines = true,
-        earth={radius=1.25,tilt=0},
-        % /frames/.cd,
-        showifo = true,
-        ifoarmlength = 2,
-        showazimuthalangle = false,
+        lineofsight/show = true,
+        sourceframe = {%
+            show = true,
+            axes = true,
+            helperlines = true,
+        },
+        signalframe = {%
+            show = true,
+            axes = true,
+            helperlines = true,
+            angles = true,
+            ascnode = true,
+            azimuthalangle = false,
+        },
+        celestialframe = {%
+            show = true,
+            angles = true,
+            axes = true,
+            helperlines = true,
+        },
+        earth = {%
+            radius = 1.25,
+            tilt = 0,
+        },
+        ifo = {%
+            show = true,
+            armlength = 2,
+        },
     },
-    mass1/.estore in = \massone,
-    mass2/.estore in = \masstwo,
+    % -- General note: For certain arguments, it makes sense to give them separately,
+    % -- in addition to them being part of a subfamily. Thus, do not be surprised if
+    % -- some things are defined multiple times.
+    % 
+    % -- Some general arguments
+    axislen/.estore in = \AxisLen,
+    axislabelpad/.estore in = \AxisLabelPad,
+    uselayers/.estore in = \UseLayers,
+    % 
+    binary/mass1/.estore in = \massone,
+    binary/mass2/.estore in = \masstwo,
+    binary/eccentricity/.estore in = \eccentricity,
+    eccentricity/.estore in = \eccentricity,
+    binary/scalefactor/.estore in = \Binary@scalefactor,
+    binary/distance/.estore in = \Binary@distance,
+    binary/bhsizepersolmass/.estore in = \BHsizepersolmass,
     % 
     inclination/value/.estore in = \Inclination,
     inclination/show/.estore in = \Inclination@Show,
+    inclination/label/.estore in = \Inclination@Label,
     % 
     polarization/value/.estore in = \Polarization,
     polarization/show/.estore in = \Polarization@Show,
+    polarization/label/.estore in = \Polarization@Label,
     % 
-    longascnodes/value/.estore in = \LongAscNodes,
+    longascnodes/value/.code = {
+        \def\LongAscNodes{#1}
+        \def\LongAscOmega{#1 + 90}
+    },
     longascnodes/show/.estore in = \LongAscNodes@Show,
+    omegalabel/.estore in = \Omega@Label,
     % 
     phiref/value/.estore in = \PhiRef,
     phiref/show/.estore in = \PhiRef@Show,
+    phiref/label/.estore in = \PhiRef@Label,
     % 
     ra/value/.estore in = \Ra,
     ra/show/.estore in = \Ra@Show,
+    ra/label/.estore in = \Ra@Label,
     % 
     dec/value/.estore in = \Dec,
     dec/show/.estore in = \Dec@Show,
+    dec/label/.estore in = \Dec@Label,
     % 
-    inclinationlabel/.estore in = \InclinationLabel,
-    polarizationlabel/.estore in = \PolarizationLabel,
-    ralabel/.estore in = \RaLabel,
-    declabel/.estore in = \DecLabel,
-    distancelabel/.estore in = \DistanceLabel,
-    lineofsightlabel/.estore in = \LineOfSightLabel,
-    omegalabel/.estore in = \OmegaLabel,
-    phireflabel/.estore in = \PhiRefLabel,
-    ascnodelabel/.estore in = \AscNodeLabel,
+    lineofsight/show/.estore in = \LineOfSight@Show,
+    lineofsight/label/.estore in = \LineOfSightLabel,
     % 
-    showlineofsight/.estore in = \ShowLineOfSight,
+    distance/value/.estore in = \Binary@distance,
+    distance/show/.estore in = \Binary@distance@show,
+    distance/label/.estore in = \Distance@Label,
     % 
-    eccentricity/.estore in = \eccentricity,
+    ascnode/show/.estore in = \SignalFrame@AscNode@Show,
+    ascnode/label/.estore in = \AscNode@Label,
     % 
-    axislen/.estore in = \AxisLen,
+    labels/inclination/.estore in = \Inclination@Label,
+    labels/polarization/.estore in = \Polarization@Label,
+    labels/longascnodes/.estore in = \LongAscNodes@Label,
+    labels/omega/.estore in = \Omega@Label,
+    labels/phiref/.estore in = \PhiRef@Label,
+    labels/ra/.estore in = \Ra@Label,
+    labels/dec/.estore in = \Dec@Label,
+    labels/lineofsight/.estore in = \LineOfSight@Label,
+    labels/distance/.estore in = \Distance@Label,
+    labels/ascnode/.estore in = \AscNode@Label,
     % 
-    axislabelpad/.estore in = \AxisLabelPad,
+    angles/inclination/.code = {\passonpgfkeys{/frames}{inclination}{value}{#1}},
+    angles/polarization/.code = {\passonpgfkeys{/frames}{polarization}{value}{#1}},
+    angles/longascnodes/.code = {\passonpgfkeys{/frames}{longascnodes}{value}{#1}},
+    angles/phiref/.code = {\passonpgfkeys{/frames}{phiref}{value}{#1}},
+    angles/ra/.code = {\passonpgfkeys{/frames}{ra}{value}{#1}},
+    angles/dec/.code = {\passonpgfkeys{/frames}{dec}{value}{#1}},
     % 
-    binaryscalefactor/.estore in = \binaryscalefactor,
+    sourceframe/show/.estore in = \ShowSourceFrame,
+    sourceframe/axes/.estore in = \SourceFrameAxes,
+    sourceframe/helperlines/.estore in = \SourceFrameHelperlines,
     % 
-    binarydistance/.estore in = \binarydistance,
+    signalframe/show/.estore in = \ShowSignalFrame,
+    signalframe/axes/.estore in = \SignalFrameAxes,
+    signalframe/helperlines/.estore in = \SignalFrameHelperlines,
+    signalframe/angles/.estore in = \SignalFrameAngles,
+    signalframe/ascnode/.estore in = \SignalFrame@AscNode@Show,
+    signalframe/azimuthalangle/.estore in = \AzimuthalAngle,
+    azimuthalangle/.estore in = \AzimuthalAngle,
     % 
-    uselayers/.estore in = \UseLayers,
+    celestialframe/show/.estore in = \ShowCelestialFrame,
+    celestialframe/axes/.estore in = \CelestialFrameAxes,
+    celestialframe/helperlines/.estore in = \CelestialFrameHelperlines,
+    celestialframe/angles/.estore in = \CelestialFrameAngles,
     % 
-    % celestialframe={
-    %     show=true,
-    %     angles=true,
-    %     axes=true,
-    %     helperlines=true,
-    % }
-    % 
-    % 
-    showcelestialframe/.estore in = \ShowCelestialFrame,
-    % 
-    celestialframeaxes/.estore in = \CelestialFrameAxes,
-    % 
-    celestialframehelperlines/.estore in = \CelestialFrameHelperlines,
-    % 
-    celestialframeangles/.estore in = \CelestialFrameAngles,
-    % 
-    showsignalframe/.estore in = \ShowSignalFrame,
-    % 
-    signalframeaxes/.estore in = \SignalFrameAxes,
-    % 
-    signalframehelperlines/.estore in = \SignalFrameHelperlines,
-    % 
-    signalframeangles/.estore in = \SignalFrameAngles,
-    % 
-    showsourceframe/.estore in = \ShowSourceFrame,
-    % 
-    sourceframeaxes/.estore in = \SourceFrameAxes,
-    % 
-    sourceframehelperlines/.estore in = \SourceFrameHelperlines,
-    % 
-    showifo/.estore in = \ShowIFO,
-    % 
-    ifoarmlength/.estore in = \armlength,
-    % 
-    showazimuthalangle/.estore in = \ShowAzimuthalAngle,
+    ifo/show/.estore in = \IFO@Show,
+    ifo/armlength/.estore in = \IFO@Armlength,
 }
 
-\def\LongAscOmega{90 + \LongAscNodes}
 
 \def\BHsizepersolmass{1/20*0.7 cm} % So that 20 solmass BH has size of 0.7 cm
 
 
 % -- Define a pgfkeys handler
 % -- Arg 1: base family; arg 2: subfamily that we wish to parse
-\newcommand*\pgfkeysdefvalueorkeys[2]{%
+\newcommand*\pgfkeysdefvalueorkeys[3]{%
   \pgfkeys{#1/#2/.code={%
     \pgfutil@in@={##1}%
     \ifpgfutil@in@%
@@ -227,44 +248,45 @@
       \pgfkeysalso{#1/#2/.cd, ##1, #1/.cd}%
     \else
       % -- Only one value given, set it to "value" subkey
-    %   \pgfkeyssetvalue{#1/#2/value}{##1}%
-    \pgfkeysalso{#1/#2/value=##1, #1/.cd}%  We NEED this because we want to trigger the setter, in order for commands to get defined
+    \pgfkeysalso{#1/#2/#3=##1, #1/.cd}%  We NEED this because we want to trigger the setter, in order for commands to get defined
     \fi
   }}
   % -- It is CRUCIAL to navigate back to the base family, otherwise subsequent keys are not processed correctly
 }
-% \newcommand*\pgfkeysdefvalueorkeys[1]{%
-%   \pgfkeys{#1/.code={%
-%     \pgfutil@in@={##1}%
-%     \ifpgfutil@in@%
-%       % -- Multiple key-value pairs given, parse them
-%     %   \pgfkeysalso{#1/.cd, ##1}%
-%       \pgfkeysalso{#1/.cd, ##1, /frames/.cd}%
-%     \else
-%       % -- Only one value given, set it to "value" subkey
-%     %   \pgfkeyssetvalue{#1/value}{##1}%
-%     %   \pgfkeysalso{#1/value=##1}%  We NEED this because we want to trigger the setter, in order for commands to get defined
-%       \pgfkeysalso{#1/value=##1, /frames/.cd}%  We NEED this because we want to trigger the setter, in order for commands to get defined
-%     \fi
-%   }}
-% }
+
+\newcommand*\passonpgfkeys[4]{%
+    \pgfutil@in@={#4}%
+    \ifpgfutil@in@%
+        % -- Multiple key-value pairs given, parse them
+        \pgfkeysalso{#1/#2/.cd, #4, #1/.cd}%
+    \else
+        % -- Only one value given, set it to "value" subkey
+        \pgfkeysalso{#1/#2/#3=#4, #1/.cd}%  We NEED this because we want to trigger the setter, in order for commands to get defined
+    \fi
+}
 
 
-\pgfkeysdefvalueorkeys{/frames}{inclination}
-\pgfkeysdefvalueorkeys{/frames}{polarization}
-\pgfkeysdefvalueorkeys{/frames}{longascnodes}
-\pgfkeysdefvalueorkeys{/frames}{phiref}
-\pgfkeysdefvalueorkeys{/frames}{ra}
-\pgfkeysdefvalueorkeys{/frames}{dec}
-\pgfkeysdefvalueorkeys{/frames}{earth}
+\pgfkeysdefvalueorkeys{/frames}{inclination}{value}
+\pgfkeysdefvalueorkeys{/frames}{polarization}{value}
+\pgfkeysdefvalueorkeys{/frames}{longascnodes}{value}
+\pgfkeysdefvalueorkeys{/frames}{phiref}{value}
+\pgfkeysdefvalueorkeys{/frames}{ra}{value}
+\pgfkeysdefvalueorkeys{/frames}{dec}{value}
 
-% \pgfkeysdefvalueorkeys{/frames/inclination}
-% \pgfkeysdefvalueorkeys{/frames/polarization}
-% \pgfkeysdefvalueorkeys{/frames/longascnodes}
-% \pgfkeysdefvalueorkeys{/frames/phiref}
-% \pgfkeysdefvalueorkeys{/frames/ra}
-% \pgfkeysdefvalueorkeys{/frames/dec}
-% \pgfkeysdefvalueorkeys{/frames/earth}
+\pgfkeysdefvalueorkeys{/frames}{lineofsight}{show}
+\pgfkeysdefvalueorkeys{/frames}{distance}{value}
+\pgfkeysdefvalueorkeys{/frames}{ascnode}{show}
+\pgfkeysdefvalueorkeys{/frames}{labels}{}  % There is no sensible default here
+\pgfkeysdefvalueorkeys{/frames}{angles}{}  % There is no sensible default here
+
+\pgfkeysdefvalueorkeys{/frames}{binary}{show}
+\pgfkeysdefvalueorkeys{/frames}{sourceframe}{show}
+\pgfkeysdefvalueorkeys{/frames}{signalframe}{show}
+\pgfkeysdefvalueorkeys{/frames}{celestialframe}{show}
+\pgfkeysdefvalueorkeys{/frames}{earth}{radius}
+% -- Earth already exists, due to earth_tikz file. But it is still important to define
+% -- it here, so that we get correct navigation back (and convenient, too, for default)
+\pgfkeysdefvalueorkeys{/frames}{ifo}{show}
 
 
 \pgfkeys{/frames, default}  % Probably not required, but I want to make absolutely sure everything is defined
@@ -286,6 +308,7 @@
 
 
 
+% TODO: implement show checks for all angles
 \newcommand{\drawframes}[1][]{%
     % -- Import keys for styling
     \def\earthcalledfrombinary{true}
@@ -318,7 +341,7 @@
             \drawearth;
             
             % -- Draw interferometer on earth
-            \ifthenelse{\equal{\ShowIFO}{true}}{
+            \ifthenelse{\equal{\IFO@Show}{true}}{
                 \begin{scope}[
                     tdplot_screen_coords,
                     shift={(-0.12, 0.55)},
@@ -337,10 +360,10 @@
                     
                     
                     \coordinate (BS) at (0, 0);
-                    \coordinate (MX) at ($(BS) + (\armlength, 0)$);
-                    \coordinate (MY) at ($(BS) + (0, \armlength)$);
-                    \coordinate (LA) at ($(BS) - (0.3*\armlength, 0)$);
-                    \coordinate (PD) at ($(BS) - (0, 0.3*\armlength)$);
+                    \coordinate (MX) at ($(BS) + (\IFO@Armlength, 0)$);
+                    \coordinate (MY) at ($(BS) + (0, \IFO@Armlength)$);
+                    \coordinate (LA) at ($(BS) - (0.3*\IFO@Armlength, 0)$);
+                    \coordinate (PD) at ($(BS) - (0, 0.3*\IFO@Armlength)$);
                 
                 
                     \draw[ray] (LA) -- (BS) {}; % Laser -> beam splitter
@@ -392,7 +415,7 @@
                         \draw[
                             layer=angles,
                             draw=none,
-                        ] (earthpos) ++({(1+\AxisLabelPad)*\AxisLen}, 0, 0) arc (0:-\Dec:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\DecLabel};
+                        ] (earthpos) ++({(1+\AxisLabelPad)*\AxisLen}, 0, 0) arc (0:-\Dec:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\Dec@Label};
                     \end{scope}
                 \fi
             
@@ -414,7 +437,7 @@
                         \draw[
                             layer=angles,
                             draw=none,
-                        ] (earthpos) ++({(1+\AxisLabelPad)*\AxisLen}, 0, 0) arc (0:\Ra:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\RaLabel};
+                        ] (earthpos) ++({(1+\AxisLabelPad)*\AxisLen}, 0, 0) arc (0:\Ra:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\Ra@Label};
                     \end{scope}
                 \fi
             }{}
@@ -430,7 +453,7 @@
         rotate around z=\Ra,
         rotate around y=-\Dec, % Fine for position, no direction/orientation involved
     ]
-        \coordinate (binaryposition) at (\binarydistance*\AxisLen, 0, 0);
+        \coordinate (binaryposition) at (\Binary@distance*\AxisLen, 0, 0);
     \end{scope}
 
 
@@ -492,8 +515,8 @@
                 \begin{scope}[
                     canvas is xy plane at z=0, % Needed for rotation of circle to work properly
                 ]
-                    \coordinate (bhoneposition) at (0.5*\binaryscalefactor*\AxisLen, 0, 0);
-                    \coordinate (bhtwoposition) at (-0.5*\binaryscalefactor*\AxisLen, 0, 0);
+                    \coordinate (bhoneposition) at (0.5*\Binary@scalefactor*\AxisLen, 0, 0);
+                    \coordinate (bhtwoposition) at (-0.5*\Binary@scalefactor*\AxisLen, 0, 0);
 
                     % -- Following may be overly complicated, but it works
                     \coordinate (bhonepositionresc) at ($ {\masstwo/(\massone+\masstwo)}*(bhoneposition) $);
@@ -514,7 +537,7 @@
                         thick,
                         opacity=0.5,
                         yscale=1-\eccentricity,
-                    ] (com) circle(0.5*\binaryscalefactor*\AxisLen cm) {};
+                    ] (com) circle(0.5*\Binary@scalefactor*\AxisLen cm) {};
                     
                     \node[
                         fill,
@@ -569,7 +592,7 @@
                             \draw[
                                 layer=angles,
                                 draw=none,
-                            ] (${(1+\AxisLabelPad)}*(zprimetip)$) arc (0:-\Inclination:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\InclinationLabel};
+                            ] (${(1+\AxisLabelPad)}*(zprimetip)$) arc (0:-\Inclination:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\Inclination@Label};
                         \end{scope}
                     \fi
         
@@ -590,10 +613,10 @@
                             layer=angles,
                             draw=none,
                             phirefcolor,
-                        ] (binaryposition) ++(${(1+\AxisLabelPad)}*(xtip)$) arc (0:-\PhiRef:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\PhiRefLabel};
+                        ] (binaryposition) ++(${(1+\AxisLabelPad)}*(xtip)$) arc (0:-\PhiRef:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\PhiRef@Label};
                     \fi
 
-                    \ifthenelse{\equal{\ShowAzimuthalAngle}{true}}{
+                    \ifthenelse{\equal{\AzimuthalAngle}{true}}{
                         % -- Visualize phiN from Fig. 1 of https://www.nature.com/articles/s41550-025-02632-5
                         \begin{scope}[
                             layer=angles,
@@ -649,14 +672,14 @@
 
 
         % -- Visualization of line of ascending node
-        \ifthenelse{\equal{\SignalFrameAxes}{true}}{
+        \ifthenelse{\equal{\SignalFrameAxes}{true} \and \equal{\SignalFrame@AscNode@Show}{true}}{
             \draw[
                 layer=axes,
                 ->,
             % ] (binaryposition) -- (\AxisLen, 0, 0) node[anchor=north]{AscNodeLabel};
             % -- TODO: maybe move label to other place if longascnodes = 0? Then this here coincides with y'
             % -- -> better solution: elongate line that indicates ascending node
-            ] (binaryposition) -- (1.25*\AxisLen, 0, 0) node[pos=1+\AxisLabelPad]{\AscNodeLabel};
+            ] (binaryposition) -- (1.25*\AxisLen, 0, 0) node[pos=1+\AxisLabelPad]{\AscNode@Label};
         }{}
         \end{scope}
 
@@ -680,8 +703,8 @@
                     layer=angles,
                     draw=none,
                     longasccolor,
-                ] (binaryposition) ++(${(1+\AxisLabelPad)}*(xprimetip)$) arc (0:\LongAscOmega:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\OmegaLabel};
-                % ] (binaryposition) ++(${(1+\AxisLabelPad)}*(xprimetip)$) arc (0:-\LongAscOmega:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\OmegaLabel};
+                ] (binaryposition) ++(${(1+\AxisLabelPad)}*(xprimetip)$) arc (0:\LongAscOmega:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\Omega@Label};
+                % ] (binaryposition) ++(${(1+\AxisLabelPad)}*(xprimetip)$) arc (0:-\LongAscOmega:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\Omega@Label};
             \fi
     
             % -- Visualization of polarization
@@ -704,8 +727,8 @@
                         layer=angles,
                         draw=none,
                         polcolor,
-                    ] (binaryposition) ++(${(1+\AxisLabelPad)}*(xprimetip)$) arc (0:-\Polarization:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\PolarizationLabel}; % Counter-clockwise around z'
-                    % ] (binaryposition) ++(${(1+\AxisLabelPad)}*(xprimetip)$) arc (0:\Polarization:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\PolarizationLabel}; % Clockwise around z'
+                    ] (binaryposition) ++(${(1+\AxisLabelPad)}*(xprimetip)$) arc (0:-\Polarization:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\Polarization@Label}; % Counter-clockwise around z'
+                    % ] (binaryposition) ++(${(1+\AxisLabelPad)}*(xprimetip)$) arc (0:\Polarization:{(1+\AxisLabelPad)*\AxisLen}) node[midway] {\Polarization@Label}; % Clockwise around z'
                 \fi
             }{}
         }{}
@@ -715,7 +738,7 @@
         \end{scope}
     }{}
 
-	\ifthenelse{\equal{\ShowCelestialFrame}{true} \and \equal{\ShowLineOfSight}{true}}{
+	\ifthenelse{\equal{\ShowCelestialFrame}{true}}{
         % -- Visualization of relation between celestial and signal frame        
         \begin{scope}[
             % layer=angles,
@@ -729,13 +752,14 @@
             % \ifnum\decra>0
             % \ifdim\decrasignum pt>0 pt
             \ifnum\Ra<0
-                \draw[
-                    ->,
-                    layer=angles,
-                ] (earthpos) -- (binaryposition) node[midway, sloped, above]{\LineOfSightLabel};
+                \ifthenelse{\equal{\LineOfSight@Show}{true}}{
+                    \draw[
+                        ->,
+                        layer=angles,
+                    ] (earthpos) -- (binaryposition) node[midway, sloped, above]{\LineOfSightLabel};
+                }{}
             
-                \ifx\DistanceLabel\empty
-	            \else
+                \ifthenelse{\equal{\Binary@distance@show}{true}}{
 	                \draw[
 	                    decorate,
 	                    decoration={
@@ -744,15 +768,16 @@
 	                        % mirror, -> now handled by if clause
 	                    },
                         layer=angles,
-	                ] (earthpos) -- (binaryposition) node[midway, sloped, below=10]{\DistanceLabel};
-	            \fi
+	                ] (earthpos) -- (binaryposition) node[midway, sloped, below=10]{\Distance@Label};
+                }{}
             \else
-                \draw[
-                    ->,
-                ] (earthpos) -- (binaryposition) node[midway, sloped, below]{\LineOfSightLabel};
+                \ifthenelse{\equal{\LineOfSight@Show}{true}}{
+                    \draw[
+                        ->,
+                    ] (earthpos) -- (binaryposition) node[midway, sloped, below]{\LineOfSightLabel};
+                }{}
                 
-                \ifx\DistanceLabel\empty
-               	\else
+                \ifthenelse{\equal{\Binary@distance@show}{true}}{
 	                \draw[
 	                    decorate,
 	                    decoration={
@@ -760,8 +785,8 @@
 	                        amplitude=10pt,
 	                    },
                         layer=angles,
-	                ] (earthpos) -- (binaryposition) node[midway, sloped, above=10]{\DistanceLabel};
-	            \fi
+	                ] (earthpos) -- (binaryposition) node[midway, sloped, above=10]{\Distance@Label};
+                }{}
             \fi
 
         \end{scope}
