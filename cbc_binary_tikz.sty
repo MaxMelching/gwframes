@@ -38,7 +38,7 @@
 
 
 \pgfkeys{
-	/binary/.is family, /binary,
+	/frames/binary/.is family, /frames/binary,
 	default/.style = {
         mass1 = 20,
         mass2 = 10,
@@ -69,6 +69,9 @@
     showcombinedquantities/.estore in = \ShowCombinedQuantities,
 }
 
+\pgfkeys{/frames/binary, default}  % Probably not required, but I want to make absolutely sure everything is defined -> we actually rely on this in cbc_frames_tikz, so definitely needed
+
+
 \def\BHsizepersolmass{1/20*0.7 cm} % So that 20 solmass BH has size of 0.7 sm
 \def\UnitSpinSize{1.5*\BHsizepersolmass} % To get proportions right
 
@@ -76,7 +79,7 @@
 
 \newcommand{\drawbinary}[1][]{%
     % -- Import keys for styling
-    \pgfkeys{/binary, default, #1}
+    \pgfkeys{/frames/binary, default, #1}
     
     \begin{scope}[
         tdplot_main_coords, % Make sure their default value is used
