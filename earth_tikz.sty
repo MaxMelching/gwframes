@@ -40,7 +40,7 @@
 
 
 % -- Define a variable to track if defaults were applied
-\def\earthcalledfrombinary{false}
+\def\cbcframes@earthcalledfrombinary{false}
 
 
 \pgfkeys{
@@ -49,8 +49,8 @@
         radius = 1,
         tilt = 0,
     },
-    radius/.estore in = \RE,
-    tilt/.estore in = \angE,
+    radius/.estore in = \earth@RE,
+    tilt/.estore in = \earth@angE,
 }
 
 \pgfkeys{/frames/earth, default}  % Probably not required, but I want to make absolutely sure everything is defined -> we actually rely on this in cbc_frames_tikz, so definitely needed
@@ -62,45 +62,45 @@
 	% wrinkle/.style={rounded corners=0.2pt,decorate,decoration={random steps,segment length=1pt,amplitude=0.2pt}},  % Original, also error now
     % wrinkle/.style={rounded corners=0.6,decorate,decoration={random steps,segment length=0.5,amplitude=0.6}}, % For higher RE, things have to be changed here as well. So increasing scale is better solution -> ah, scale does not really help... So we do manually again
     wrinkle/.style={rounded corners=0.2,decorate,decoration={random steps,segment length=1,amplitude=0.4}}, % New configuration
-    land/.style={ultra thin,draw=#1!40!black,rotate=-\angE,postaction={fill=#1},wrinkle},
+    land/.style={ultra thin,draw=#1!40!black,rotate=-\earth@angE,postaction={fill=#1},wrinkle},
     mysmallarrow/.style={-{Latex[length=3,width=2,bend]},red,line width=0.4,line cap=round},
 }
 
 
 \newcommand{\drawearth}[1][]{%
-    \ifthenelse{\equal{\earthcalledfrombinary}{true}}{
+    \ifthenelse{\equal{\cbcframes@earthcalledfrombinary}{true}}{
     }{
 	   \pgfkeys{/frames/earth, default, #1}
     }
 
 
     \begin{scope}
-        \fill[water] (0,0) circle(\RE); % Earth fill (even)
+        \fill[water] (0,0) circle(\earth@RE); % Earth fill (even)
         
         \begin{scope} % clip
-            \clip (0,0) circle(\RE);
+            \clip (0,0) circle(\earth@RE);
             
             
             \fill[land=grass,rotate=-2] % land mass
-            (-30:0.36*\RE) ellipse({0.22*\RE} and {0.50*\RE}) % Africa south
-            (45:0.17*\RE) ellipse({0.39*\RE} and {0.21*\RE}) % North Africa
-            {[rotate=22] (31:0.83*\RE) ellipse({0.45*\RE} and {0.28*\RE})} % Asia
-            {[rotate=38] (54:0.55*\RE) ellipse({0.33*\RE} and {0.09*\RE})} % West Europa
-            {[rotate=22] (65:0.79*\RE) ellipse({0.19*\RE} and {0.04*\RE})} % North Europa
-            {[rotate=-10] (216:1.10*\RE) ellipse({0.22*\RE} and {0.40*\RE})} % South America
+            (-30:0.36*\earth@RE) ellipse({0.22*\earth@RE} and {0.50*\earth@RE}) % Africa south
+            (45:0.17*\earth@RE) ellipse({0.39*\earth@RE} and {0.21*\earth@RE}) % North Africa
+            {[rotate=22] (31:0.83*\earth@RE) ellipse({0.45*\earth@RE} and {0.28*\earth@RE})} % Asia
+            {[rotate=38] (54:0.55*\earth@RE) ellipse({0.33*\earth@RE} and {0.09*\earth@RE})} % West Europa
+            {[rotate=22] (65:0.79*\earth@RE) ellipse({0.19*\earth@RE} and {0.04*\earth@RE})} % North Europa
+            {[rotate=-10] (216:1.10*\earth@RE) ellipse({0.22*\earth@RE} and {0.40*\earth@RE})} % South America
             ;
             \fill[land=sand] % sahara
-            (46:0.18*\RE) ellipse({0.35*\RE} and {0.16*\RE});
+            (46:0.18*\earth@RE) ellipse({0.35*\earth@RE} and {0.16*\earth@RE});
             \fill[land=sand,rotate=22] % Middle East
-            (24:0.69*\RE) ellipse({0.26*\RE} and {0.07*\RE});
-            \fill[land=white,rotate=-65] (186:0.95*\RE) ellipse({0.08*\RE} and {0.20*\RE}); % Greenland
-            \fill[land=white] (88:\RE) ellipse({0.4*\RE} and {0.13*\RE}); % ice sheet north
-            \fill[land=white] (-96:\RE) ellipse({0.4*\RE} and {0.1*\RE}); % ice sheet south
+            (24:0.69*\earth@RE) ellipse({0.26*\earth@RE} and {0.07*\earth@RE});
+            \fill[land=white,rotate=-65] (186:0.95*\earth@RE) ellipse({0.08*\earth@RE} and {0.20*\earth@RE}); % Greenland
+            \fill[land=white] (88:\earth@RE) ellipse({0.4*\earth@RE} and {0.13*\earth@RE}); % ice sheet north
+            \fill[land=white] (-96:\earth@RE) ellipse({0.4*\earth@RE} and {0.1*\earth@RE}); % ice sheet south
             
             
             \fill[path fading=halo,white,opacity=0.42] % create bright spot shifted towards sun
-            (-180:{0.7*\RE} and {0.2*\RE}) circle(1.2*\RE);
+            (-180:{0.7*\earth@RE} and {0.2*\earth@RE}) circle(1.2*\earth@RE);
         \end{scope}
-        \draw[black,ultra thin] (0,0) circle(\RE); % Earth outline
+        \draw[black,ultra thin] (0,0) circle(\earth@RE); % Earth outline
     \end{scope}
 }
