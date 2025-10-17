@@ -93,23 +93,23 @@
 	default/.style = {
         mass1 = 20,
         mass2 = 10,
-        /frames/.cd,
+        % /frames/.cd,
         inclination = 0,
-        /frames/.cd,
+        % /frames/.cd,
         polarization = 0,
-        /frames/.cd,
+        % /frames/.cd,
         longascnodes = 0,
-        /frames/.cd,
+        % /frames/.cd,
         phiref = 0,
-        /frames/.cd,
+        % /frames/.cd,
         ra = 0,
-        /frames/.cd,
+        % /frames/.cd,
         dec = 0,
-        /frames/.cd,
+        % /frames/.cd,
         eccentricity = 0,
         axislen = 3,
-        axislabelpad = 0.12,  % Corresponds to 10% of \AxisLen
-        binaryscalefactor = 0.5, % Radius of each binary component, in multiples of axislen
+        axislabelpad = 0.12,  % Corresponds to 12% of \AxisLen
+        binaryscalefactor = 1, % Distance between binary components, in multiples of axislen
         binarydistance = 3, % Distance of binary from earth, in multiples of axislen
         uselayers = false,
         showcelestialframe = true,
@@ -124,47 +124,32 @@
         showsourceframe = true,
         sourceframeaxes = true,
         sourceframehelperlines = true,
-        earthradius = 1.25,
-        earthtilt = 0,
+        earth={radius=1.25,tilt=0},
+        % /frames/.cd,
         showifo = true,
         ifoarmlength = 2,
         showazimuthalangle = false,
     },
     mass1/.estore in = \massone,
-    mass1/.initial = 20,
     mass2/.estore in = \masstwo,
-    mass2/.initial = 10,
     % 
-    % inclination/value/.estore in = \Inclination@Value,
     inclination/value/.estore in = \Inclination,
-    inclination/value/.initial = 0,
     inclination/show/.estore in = \Inclination@Show,
-    inclination/show/.initial = true,
     % 
     polarization/value/.estore in = \Polarization,
-    polarization/value/.initial = 0,
     polarization/show/.estore in = \Polarization@Show,
-    polarization/show/.initial = true,
     % 
     longascnodes/value/.estore in = \LongAscNodes,
-    longascnodes/value/.initial = 0,
     longascnodes/show/.estore in = \LongAscNodes@Show,
-    longascnodes/show/.initial = true,
     % 
     phiref/value/.estore in = \PhiRef,
-    phiref/value/.initial = 0,
     phiref/show/.estore in = \PhiRef@Show,
-    phiref/show/.initial = true,
     % 
     ra/value/.estore in = \Ra,
-    ra/value/.initial = 0,
     ra/show/.estore in = \Ra@Show,
-    ra/show/.initial = true,
     % 
     dec/value/.estore in = \Dec,
-    dec/value/.initial = 0,
     dec/show/.estore in = \Dec@Show,
-    dec/show/.initial = true,
     % 
     inclinationlabel/.estore in = \InclinationLabel,
     polarizationlabel/.estore in = \PolarizationLabel,
@@ -179,22 +164,16 @@
     showlineofsight/.estore in = \ShowLineOfSight,
     % 
     eccentricity/.estore in = \eccentricity,
-    eccentricity/.initial = \eccentricity,
     % 
     axislen/.estore in = \AxisLen,
-    axislen/.initial = 3,
     % 
     axislabelpad/.estore in = \AxisLabelPad,
-    axislabelpad/.initial = 0.12,
     % 
     binaryscalefactor/.estore in = \binaryscalefactor,
-    binaryscalefactor/.initial = 0.5,
     % 
     binarydistance/.estore in = \binarydistance,
-    binarydistance/.initial = 3,
     % 
     uselayers/.estore in = \UseLayers,
-    uselayers/.initial = false,
     % 
     % celestialframe={
     %     show=true,
@@ -204,54 +183,33 @@
     % }
     % 
     % 
-    % 
-    earthradius/.estore in = \RE,
-    earthradius/.initial = 1.25,
-    % 
-    earthtilt/.estore in = \angE,
-    earthtilt/.initial = 0,
-    % 
     showcelestialframe/.estore in = \ShowCelestialFrame,
-    showcelestialframe/.initial = true,
     % 
     celestialframeaxes/.estore in = \CelestialFrameAxes,
-    celestialframeaxes/.initial = true,
     % 
     celestialframehelperlines/.estore in = \CelestialFrameHelperlines,
-    celestialframehelperlines/.initial = true,
     % 
     celestialframeangles/.estore in = \CelestialFrameAngles,
-    celestialframeangles/.initial = true,
     % 
     showsignalframe/.estore in = \ShowSignalFrame,
-    showsignalframe/.initial = true,
     % 
     signalframeaxes/.estore in = \SignalFrameAxes,
-    signalframeaxes/.initial = true,
     % 
     signalframehelperlines/.estore in = \SignalFrameHelperlines,
-    signalframehelperlines/.initial = true,
     % 
     signalframeangles/.estore in = \SignalFrameAngles,
-    signalframeangles/.initial = true,
     % 
     showsourceframe/.estore in = \ShowSourceFrame,
-    showsourceframe/.initial = true,
     % 
     sourceframeaxes/.estore in = \SourceFrameAxes,
-    sourceframeaxes/.initial = true,
     % 
     sourceframehelperlines/.estore in = \SourceFrameHelperlines,
-    sourceframehelperlines/.initial = true,
     % 
     showifo/.estore in = \ShowIFO,
-    showifo/.initial = true,
     % 
     ifoarmlength/.estore in = \armlength,
-    ifoarmlength/.initial = 2,
     % 
     showazimuthalangle/.estore in = \ShowAzimuthalAngle,
-    showazimuthalangle/.initial = false,
 }
 
 \def\LongAscOmega{90 + \LongAscNodes}
@@ -260,39 +218,56 @@
 
 
 % -- Define a pgfkeys handler
-% \newcommand*\pgfkeysdefvalueorkeys[2]{%
-%   \pgfkeys{#1/#2/.code={%
-%     \pgfutil@in@={##1}%
-%     \ifpgfutil@in@%
-%       % -- Multiple key-value pairs given, parse them
-%       \pgfkeysalso{#1/#2/.cd, ##1}%
-%       \pgfkeys{#1/.cd}%
-%     \else
-%       % -- Only one value given, set it to "value" subkey
-%       \pgfkeyssetvalue{#1/#2/value}{##1}%
-%     \fi
-%   }}
-% }
-\newcommand*\pgfkeysdefvalueorkeys[1]{%
-  \pgfkeys{#1/.code={%
+% -- Arg 1: base family; arg 2: subfamily that we wish to parse
+\newcommand*\pgfkeysdefvalueorkeys[2]{%
+  \pgfkeys{#1/#2/.code={%
     \pgfutil@in@={##1}%
     \ifpgfutil@in@%
       % -- Multiple key-value pairs given, parse them
-      \pgfkeysalso{#1/.cd, ##1}%
+      \pgfkeysalso{#1/#2/.cd, ##1, #1/.cd}%
     \else
       % -- Only one value given, set it to "value" subkey
-    %   \pgfkeyssetvalue{#1/value}{##1}%
-      \pgfkeysalso{#1/value=##1}%
+    %   \pgfkeyssetvalue{#1/#2/value}{##1}%
+    \pgfkeysalso{#1/#2/value=##1, #1/.cd}%  We NEED this because we want to trigger the setter, in order for commands to get defined
     \fi
   }}
+  % -- It is CRUCIAL to navigate back to the base family, otherwise subsequent keys are not processed correctly
 }
+% \newcommand*\pgfkeysdefvalueorkeys[1]{%
+%   \pgfkeys{#1/.code={%
+%     \pgfutil@in@={##1}%
+%     \ifpgfutil@in@%
+%       % -- Multiple key-value pairs given, parse them
+%     %   \pgfkeysalso{#1/.cd, ##1}%
+%       \pgfkeysalso{#1/.cd, ##1, /frames/.cd}%
+%     \else
+%       % -- Only one value given, set it to "value" subkey
+%     %   \pgfkeyssetvalue{#1/value}{##1}%
+%     %   \pgfkeysalso{#1/value=##1}%  We NEED this because we want to trigger the setter, in order for commands to get defined
+%       \pgfkeysalso{#1/value=##1, /frames/.cd}%  We NEED this because we want to trigger the setter, in order for commands to get defined
+%     \fi
+%   }}
+% }
 
-\pgfkeysdefvalueorkeys{/frames/inclination}
-\pgfkeysdefvalueorkeys{/frames/polarization}
-\pgfkeysdefvalueorkeys{/frames/longascnodes}
-\pgfkeysdefvalueorkeys{/frames/phiref}
-\pgfkeysdefvalueorkeys{/frames/ra}
-\pgfkeysdefvalueorkeys{/frames/dec}
+
+\pgfkeysdefvalueorkeys{/frames}{inclination}
+\pgfkeysdefvalueorkeys{/frames}{polarization}
+\pgfkeysdefvalueorkeys{/frames}{longascnodes}
+\pgfkeysdefvalueorkeys{/frames}{phiref}
+\pgfkeysdefvalueorkeys{/frames}{ra}
+\pgfkeysdefvalueorkeys{/frames}{dec}
+\pgfkeysdefvalueorkeys{/frames}{earth}
+
+% \pgfkeysdefvalueorkeys{/frames/inclination}
+% \pgfkeysdefvalueorkeys{/frames/polarization}
+% \pgfkeysdefvalueorkeys{/frames/longascnodes}
+% \pgfkeysdefvalueorkeys{/frames/phiref}
+% \pgfkeysdefvalueorkeys{/frames/ra}
+% \pgfkeysdefvalueorkeys{/frames/dec}
+% \pgfkeysdefvalueorkeys{/frames/earth}
+
+
+\pgfkeys{/frames, default}  % Probably not required, but I want to make absolutely sure everything is defined
 
 
 
@@ -517,8 +492,8 @@
                 \begin{scope}[
                     canvas is xy plane at z=0, % Needed for rotation of circle to work properly
                 ]
-                    \coordinate (bhoneposition) at (\binaryscalefactor*\AxisLen, 0, 0);
-                    \coordinate (bhtwoposition) at (-\binaryscalefactor*\AxisLen, 0, 0);
+                    \coordinate (bhoneposition) at (0.5*\binaryscalefactor*\AxisLen, 0, 0);
+                    \coordinate (bhtwoposition) at (-0.5*\binaryscalefactor*\AxisLen, 0, 0);
 
                     % -- Following may be overly complicated, but it works
                     \coordinate (bhonepositionresc) at ($ {\masstwo/(\massone+\masstwo)}*(bhoneposition) $);
@@ -539,7 +514,7 @@
                         thick,
                         opacity=0.5,
                         yscale=1-\eccentricity,
-                    ] (com) circle(\binaryscalefactor*\AxisLen cm) {};
+                    ] (com) circle(0.5*\binaryscalefactor*\AxisLen cm) {};
                     
                     \node[
                         fill,
