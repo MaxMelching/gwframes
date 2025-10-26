@@ -80,7 +80,7 @@
 \newcommand{\drawbinary}[1][]{%
     % -- Import keys for styling
     \pgfkeys{/frames/binary, default, #1}
-    
+
     \begin{scope}[
         tdplot_main_coords, % Make sure their default value is used
         rotate around z=\cbcbinary@Polarization,
@@ -91,7 +91,7 @@
         \coordinate (center) at (0, 0, 0);
         \coordinate (bh1position) at (\cbcbinary@BinarySeparation/2, 0, 0);
         \coordinate (bh2position) at (-\cbcbinary@BinarySeparation/2, 0, 0);
-    
+
         \begin{scope}[
             scale=\cbcbinary@UnitSpinSize, % Trick to resize vectors
         ]
@@ -99,12 +99,12 @@
             \coordinate (spin2) at (\cbcbinary@SpinTwoX, \cbcbinary@SpinTwoY, \cbcbinary@SpinTwoZ);
             \coordinate (totalspin) at ($(spin1) + (spin2)$);
         \end{scope}
-    
+
         \coordinate (angularmomentum) at (0, 0, 2*\cbcbinary@UnitSpinSize);
         \coordinate (totalangularmomentum) at ($(angularmomentum) + (totalspin)$);
         \coordinate (chieff) at ($0.5*(angularmomentum)$);
         \coordinate (chip) at ($0.5*(bh1position)$);
-    
+
 
         \begin{scope}[
             % rotate around z=\cbcbinary@Polarization,
@@ -119,7 +119,7 @@
                 opacity=0.5,
                 yscale=1-\cbcbinary@Eccentricity,
             ] (center) circle(0.5*\cbcbinary@BinarySeparation cm);
-            
+
             % -- Black Hole 1
             \node[
                 fill,
@@ -128,14 +128,14 @@
                 inner sep=0pt,
                 label={below:\textcolor{cbcbinary@spincolor}{$m_1$}},
             ] at (bh1position) {};
-        
+
             \draw[
                 ->,
                 thick,
                 cbcbinary@spincolor,
             ] (bh1position) -- ++(spin1) node[above]{$\vec{S}_1$};
-        
-            
+
+
             % -- Black Hole 2
             \node[
                 fill,
@@ -144,28 +144,28 @@
                 inner sep=0pt,
                 label={below right:\textcolor{cbcbinary@spincolor}{$m_2$}},
             ] at (bh2position) {};
-    	
+
             \draw[
                 ->,
                 thick,
                 cbcbinary@spincolor,
             ] (bh2position) -- ++(spin2) node[right]{$\vec{S}_2$};
 
-            
+
             % -- Stuff related to spins and angular momentum
             \draw[
                 ->,
                 thick,
                 cbcbinary@lcolor,
                 ] (center) -- (angularmomentum) node[left]{$\vec{L}_N$};
-                
+
             \ifthenelse{\equal{\cbcbinary@ShowCombinedQuantities}{true}}{
                 \draw[
                     ->,
                     thick,
                     cbcbinary@spincolor,
                 ] (center) -- ++(totalspin) node[right]{$\vec{S}$};
-                
+
                 \draw[
                     ->,
                     thick,
@@ -177,7 +177,7 @@
                     thick,
                     cbcbinary@chicolor,
                 ] (center) -- ++(chieff) node[below left]{$\chi_\mathrm{eff}$};
-            
+
                 \draw[
                     ->,
                     thick,
@@ -187,4 +187,4 @@
         \end{scope}
 
     \end{scope}
-} 
+}

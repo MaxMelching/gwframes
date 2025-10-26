@@ -76,11 +76,11 @@
 
     \begin{scope}
         \fill[water] (0,0) circle(\earth@RE); % Earth fill (even)
-        
+
         \begin{scope} % clip
             \clip (0,0) circle(\earth@RE);
-            
-            
+
+
             \fill[land=grass,rotate=-2] % land mass
             (-30:0.36*\earth@RE) ellipse({0.22*\earth@RE} and {0.50*\earth@RE}) % Africa south
             (45:0.17*\earth@RE) ellipse({0.39*\earth@RE} and {0.21*\earth@RE}) % North Africa
@@ -96,8 +96,8 @@
             \fill[land=white,rotate=-65] (186:0.95*\earth@RE) ellipse({0.08*\earth@RE} and {0.20*\earth@RE}); % Greenland
             \fill[land=white] (88:\earth@RE) ellipse({0.4*\earth@RE} and {0.13*\earth@RE}); % ice sheet north
             \fill[land=white] (-96:\earth@RE) ellipse({0.4*\earth@RE} and {0.1*\earth@RE}); % ice sheet south
-            
-            
+
+
             \fill[path fading=halo,white,opacity=0.42] % create bright spot shifted towards sun
             (-180:{0.7*\earth@RE} and {0.2*\earth@RE}) circle(1.2*\earth@RE);
         \end{scope}
