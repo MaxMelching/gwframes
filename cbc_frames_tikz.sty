@@ -1,5 +1,5 @@
 %% start of file `cbc_frames_tikz.sty'.
-%% Copyright 2024 Max Melching (m-melching@web.de).
+%% Copyright 2025 Max Melching (m-melching@web.de).
 %
 % This work may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License version 1.3c,
@@ -85,7 +85,7 @@
 \def\cbcframes@AscNode@Label{$\ascnode$}
 % \def\cbcframes@Omega@Label{$\Omega = \pi/2 + \mathrm{longAscNodes}$}  % Error from the curly brackets...
 \def\cbcframes@Omega@Label{$\Omega$}
-\def\cbcframes@Signalframe@AzimuthalAngle@Label{$\pi/2 -$\cbcframes@PhiRef@Label}
+\def\cbcframes@AzimuthalAngle@Label{$\pi/2 -$\cbcframes@PhiRef@Label}
 
 
 \pgfkeys{
@@ -152,11 +152,14 @@
     % 
     binary/mass1/.estore in = \cbcframes@MassOne,
     binary/mass2/.estore in = \cbcframes@MassTwo,
+    mass1/.estore in = \cbcframes@MassOne,
+    mass2/.estore in = \cbcframes@MassTwo,
     binary/eccentricity/.estore in = \cbcframes@Eccentricity,
     eccentricity/.estore in = \cbcframes@Eccentricity,
     binary/scalefactor/.estore in = \cbcframes@binary@scalefactor,
     binary/distance/.estore in = \cbcframes@Distance,
     binary/bhsizepersolmass/.estore in = \cbcframes@BHsizepersolmass,
+    bhsizepersolmass/.estore in = \cbcframes@BHsizepersolmass,
     % 
     inclination/value/.estore in = \cbcframes@Inclination,
     inclination/show/.estore in = \cbcframes@Inclination@Show,
@@ -171,7 +174,7 @@
         \def\LongAscOmega{#1 + 90}
     },
     longascnodes/show/.estore in = \cbcframes@LongAscNodes@Show,
-    omegalabel/.estore in = \cbcframes@Omega@Label,
+    longascnodes/omegalabel/.estore in = \cbcframes@Omega@Label,
     % 
     phiref/value/.estore in = \cbcframes@PhiRef,
     phiref/show/.estore in = \cbcframes@PhiRef@Show,
@@ -205,7 +208,7 @@
     labels/lineofsight/.estore in = \LineOfSight@Label,
     labels/distance/.estore in = \cbcframes@Distance@Label,
     labels/ascnode/.estore in = \cbcframes@AscNode@Label,
-    labels/azimuthalangle/.estore in = \cbcframes@Signalframe@AzimuthalAngle@Label,
+    labels/azimuthalangle/.estore in = \cbcframes@AzimuthalAngle@Label,
     % 
     angles/inclination/.code = {\cbcframes@passonpgfkeys{/frames}{inclination}{value}{#1}},
     angles/polarization/.code = {\cbcframes@passonpgfkeys{/frames}{polarization}{value}{#1}},
@@ -224,8 +227,8 @@
     signalframe/angles/.estore in = \cbcframes@Signalframe@Angles,
     signalframe/ascnode/.estore in = \cbcframes@SignalFrame@AscNode@Show,
     signalframe/azimuthalangle/.estore in = \cbcframes@Signalframe@AzimuthalAngle,
-    azimuthalangle/.estore in = \cbcframes@Signalframe@AzimuthalAngle,
-    azimuthalangle/label/.estore in = \cbcframes@Signalframe@AzimuthalAngle@Label,
+    azimuthalangle/show/.estore in = \cbcframes@Signalframe@AzimuthalAngle,
+    azimuthalangle/label/.estore in = \cbcframes@AzimuthalAngle@Label,
     % 
     celestialframe/show/.estore in = \cbcframes@Celestialframe@Show,
     celestialframe/axes/.estore in = \cbcframes@Celestialframe@Axes,
@@ -278,6 +281,7 @@
 \cbcframes@pgfkeysdefvalueorkeys{/frames}{lineofsight}{show}
 \cbcframes@pgfkeysdefvalueorkeys{/frames}{distance}{value}
 \cbcframes@pgfkeysdefvalueorkeys{/frames}{ascnode}{show}
+\cbcframes@pgfkeysdefvalueorkeys{/frames}{azimuthalangle}{show}
 \cbcframes@pgfkeysdefvalueorkeys{/frames}{labels}{}  % There is no sensible default here
 \cbcframes@pgfkeysdefvalueorkeys{/frames}{angles}{}  % There is no sensible default here
 
@@ -310,6 +314,7 @@
 
 
 
+% TODO: implement show for binary
 % TODO: implement show checks for all angles
 \newcommand{\drawframes}[1][]{%
     % -- Import keys for styling
@@ -656,7 +661,7 @@
                             \draw[
                                 draw=none,
                                 cbcframes@distancecolor,
-                            ] (binaryposition) ++ ({(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}, 0, 0) arc (0:-90+\cbcframes@PhiRef:{(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}) node[midway, sloped] {\cbcframes@Signalframe@AzimuthalAngle@Label};
+                            ] (binaryposition) ++ ({(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}, 0, 0) arc (0:-90+\cbcframes@PhiRef:{(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}) node[midway, sloped] {\cbcframes@AzimuthalAngle@Label};
                         \end{scope}
                     }{}
                 }{}
