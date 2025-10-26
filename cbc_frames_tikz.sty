@@ -92,22 +92,40 @@
 	/frames/.is family, /frames,
 	default/.style = {
         binary = {%
+            show = true,
             mass1 = 20,
             mass2 = 10,
             eccentricity = 0,
             scalefactor = 1,
-            % distance = 3,
         },
         distance = {%
             value = 3,
             show = true,
         },
-        inclination = 0,
-        polarization = 0,
-        longascnodes = 0,
-        phiref = 0,
-        ra = 0,
-        dec = 0,
+        inclination = {%
+            value = 0,
+            show = true,
+        },
+        polarization = {%
+            value = 0,
+            show = true,
+        },
+        longascnodes = {%
+            value = 0,
+            show = true,
+        },
+        phiref = {%
+            value = 0,
+            show = true,
+        },
+        ra = {%
+            value = 0,
+            show = true,
+        },
+        dec = {%
+            value = 0,
+            show = true,
+        },
         % -- No need to give defaults for labels, are all set above
         axislen = 3,
         axislabelpad = 0.12,  % Corresponds to 12% of \cbcframes@AxisLen
@@ -150,6 +168,7 @@
     axislabelpad/.estore in = \cbcframes@AxisLabelPad,
     uselayers/.estore in = \cbcframes@UseLayers,
     % 
+    binary/show/.estore in = \cbcframes@Binary@Show,
     binary/mass1/.estore in = \cbcframes@MassOne,
     binary/mass2/.estore in = \cbcframes@MassTwo,
     mass1/.estore in = \cbcframes@MassOne,
@@ -174,7 +193,7 @@
         \def\LongAscOmega{#1 + 90}
     },
     longascnodes/show/.estore in = \cbcframes@LongAscNodes@Show,
-    longascnodes/omegalabel/.estore in = \cbcframes@Omega@Label,
+    longascnodes/omegalabel/.estore in = \cbcframes@Omega@Label,  % TODO: rename to longascnodes/label?
     % 
     phiref/value/.estore in = \cbcframes@PhiRef,
     phiref/show/.estore in = \cbcframes@PhiRef@Show,
@@ -217,17 +236,33 @@
     angles/ra/.code = {\cbcframes@passonpgfkeys{/frames}{ra}{value}{#1}},
     angles/dec/.code = {\cbcframes@passonpgfkeys{/frames}{dec}{value}{#1}},
     % 
-    sourceframe/show/.estore in = \cbcframes@Sourceframe@Show,
+    sourceframe/show/.code = {%
+        \ifthenelse{\equal{#1}{false}}{%
+            % -- Only overwrite stuff if set to false
+            \def\cbcframes@Binary@Show{false}%
+            \def\cbcframes@Sourceframe@Axes{false}%
+            \def\cbcframes@Sourceframe@Helperlines{false}%
+        }{}
+    },
     sourceframe/axes/.estore in = \cbcframes@Sourceframe@Axes,
     sourceframe/helperlines/.estore in = \cbcframes@Sourceframe@Helperlines,
     % 
-    signalframe/show/.estore in = \cbcframes@Signalframe@Show,
+    signalframe/show/.code = {%
+        \ifthenelse{\equal{#1}{false}}{%
+            % -- Only overwrite stuff if set to false
+            % \def\cbcframes@Binary@Show{false}%
+            \def\cbcframes@Signalframe@Axes{false}%
+            \def\cbcframes@Signalframe@Helperlines{false}%
+            \def\cbcframes@Signalframe@Angles{false}%
+            \def\cbcframes@Signalframe@AzimuthalAngle@Show{false}%
+        }{}
+    },
     signalframe/axes/.estore in = \cbcframes@Signalframe@Axes,
     signalframe/helperlines/.estore in = \cbcframes@Signalframe@Helperlines,
     signalframe/angles/.estore in = \cbcframes@Signalframe@Angles,
     signalframe/ascnode/.estore in = \cbcframes@SignalFrame@AscNode@Show,
-    signalframe/azimuthalangle/.estore in = \cbcframes@Signalframe@AzimuthalAngle,
-    azimuthalangle/show/.estore in = \cbcframes@Signalframe@AzimuthalAngle,
+    signalframe/azimuthalangle/.estore in = \cbcframes@Signalframe@AzimuthalAngle@Show,
+    azimuthalangle/show/.estore in = \cbcframes@Signalframe@AzimuthalAngle@Show,
     azimuthalangle/label/.estore in = \cbcframes@AzimuthalAngle@Label,
     % 
     celestialframe/show/.estore in = \cbcframes@Celestialframe@Show,
@@ -314,8 +349,6 @@
 
 
 
-% TODO: implement show for binary
-% TODO: implement show checks for all angles
 \newcommand{\drawframes}[1][]{%
     % -- Import keys for styling
     \def\earthcalledfrombinary{true}
@@ -406,46 +439,50 @@
                 % -- Visualization of dec
                 \ifnum\cbcframes@Dec=0
                 \else
-                    \begin{scope}[
-                        rotate around z=\cbcframes@Ra,
-                        rotate around x=-90,
-                        cbcframes@deccolor,
-                    ]
-                        \draw[angle] (earthpos) -- (\cbcframes@AxisLen, 0, 0) arc (0:-\cbcframes@Dec:\cbcframes@AxisLen);
-                        
-                        \draw[
-                            layer=angles,
-                            ->,
-                            thick,
-                        ] (earthpos) ++(\cbcframes@AxisLen, 0, 0) arc (0:-\cbcframes@Dec:\cbcframes@AxisLen);
-                        
-                        \draw[
-                            layer=angles,
-                            draw=none,
-                        ] (earthpos) ++({(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}, 0, 0) arc (0:-\cbcframes@Dec:{(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}) node[midway] {\cbcframes@Dec@Label};
-                    \end{scope}
+                    \ifthenelse{\equal{\cbcframes@Dec@Show}{true}}{
+                        \begin{scope}[
+                            rotate around z=\cbcframes@Ra,
+                            rotate around x=-90,
+                            cbcframes@deccolor,
+                        ]
+                            \draw[angle] (earthpos) -- (\cbcframes@AxisLen, 0, 0) arc (0:-\cbcframes@Dec:\cbcframes@AxisLen);
+                            
+                            \draw[
+                                layer=angles,
+                                ->,
+                                thick,
+                            ] (earthpos) ++(\cbcframes@AxisLen, 0, 0) arc (0:-\cbcframes@Dec:\cbcframes@AxisLen);
+                            
+                            \draw[
+                                layer=angles,
+                                draw=none,
+                            ] (earthpos) ++({(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}, 0, 0) arc (0:-\cbcframes@Dec:{(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}) node[midway] {\cbcframes@Dec@Label};
+                        \end{scope}
+                    }{}
                 \fi
             
             
                 % -- Visualization of ra
                 \ifnum\cbcframes@Ra=0
                 \else
-                    \begin{scope}[
-                        cbcframes@racolor,
-                    ]
-                        \draw[angle] (earthpos) -- (\cbcframes@AxisLen, 0, 0) arc (0:\cbcframes@Ra:\cbcframes@AxisLen);
-                        
-                        \draw[
-                            layer=angles,
-                            ->,
-                            thick,
-                        ] (earthpos) ++(\cbcframes@AxisLen, 0, 0) arc (0:\cbcframes@Ra:\cbcframes@AxisLen);
-                        
-                        \draw[
-                            layer=angles,
-                            draw=none,
-                        ] (earthpos) ++({(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}, 0, 0) arc (0:\cbcframes@Ra:{(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}) node[midway] {\cbcframes@Ra@Label};
-                    \end{scope}
+                    \ifthenelse{\equal{\cbcframes@Ra@Show}{true}}{
+                        \begin{scope}[
+                            cbcframes@racolor,
+                        ]
+                            \draw[angle] (earthpos) -- (\cbcframes@AxisLen, 0, 0) arc (0:\cbcframes@Ra:\cbcframes@AxisLen);
+                            
+                            \draw[
+                                layer=angles,
+                                ->,
+                                thick,
+                            ] (earthpos) ++(\cbcframes@AxisLen, 0, 0) arc (0:\cbcframes@Ra:\cbcframes@AxisLen);
+                            
+                            \draw[
+                                layer=angles,
+                                draw=none,
+                            ] (earthpos) ++({(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}, 0, 0) arc (0:\cbcframes@Ra:{(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}) node[midway] {\cbcframes@Ra@Label};
+                        \end{scope}
+                    }{}
                 \fi
             }{}
 
@@ -518,50 +555,51 @@
                 rotate around x=\cbcframes@Inclination,
                 rotate around z=\cbcframes@PhiRef,
             ]
-     
-                \begin{scope}[
-                    canvas is xy plane at z=0, % Needed for rotation of circle to work properly
-                ]
-                    \coordinate (bhoneposition) at (0.5*\cbcframes@binary@scalefactor*\cbcframes@AxisLen, 0, 0);
-                    \coordinate (bhtwoposition) at (-0.5*\cbcframes@binary@scalefactor*\cbcframes@AxisLen, 0, 0);
+                \ifthenelse{\equal{\cbcframes@Binary@Show}{true}}{
+                    \begin{scope}[
+                        canvas is xy plane at z=0, % Needed for rotation of circle to work properly
+                    ]
+                        \coordinate (bhoneposition) at (0.5*\cbcframes@binary@scalefactor*\cbcframes@AxisLen, 0, 0);
+                        \coordinate (bhtwoposition) at (-0.5*\cbcframes@binary@scalefactor*\cbcframes@AxisLen, 0, 0);
 
-                    % -- Following may be overly complicated, but it works
-                    \coordinate (bhonepositionresc) at ($ {\cbcframes@MassTwo/(\cbcframes@MassOne+\cbcframes@MassTwo)}*(bhoneposition) $);
-                    \coordinate (bhtwopositionresc) at ($ {\cbcframes@MassOne/(\cbcframes@MassOne+\cbcframes@MassTwo)}*(bhtwoposition) $);
-                    \coordinate (com) at ($ (bhonepositionresc) + (bhtwopositionresc) $);
+                        % -- Following may be overly complicated, but it works
+                        \coordinate (bhonepositionresc) at ($ {\cbcframes@MassTwo/(\cbcframes@MassOne+\cbcframes@MassTwo)}*(bhoneposition) $);
+                        \coordinate (bhtwopositionresc) at ($ {\cbcframes@MassOne/(\cbcframes@MassOne+\cbcframes@MassTwo)}*(bhtwoposition) $);
+                        \coordinate (com) at ($ (bhonepositionresc) + (bhtwopositionresc) $);
 
-                    \coordinate (bhonepositioncom) at ($ 2*(bhonepositionresc) $);
-                    \coordinate (bhtwopositioncom) at ($ 2*(bhtwopositionresc) $);
-                    % -- 2 only works because we want distance between them.
-                    % -- Since axislen is already in x-component, we only have
-                    % -- to multiply with 2 to get distance between them
-                    % -- -> see https://en.wikipedia.org/wiki/Barycenter_(astronomy)#Two-body_problem
+                        \coordinate (bhonepositioncom) at ($ 2*(bhonepositionresc) $);
+                        \coordinate (bhtwopositioncom) at ($ 2*(bhtwopositionresc) $);
+                        % -- 2 only works because we want distance between them.
+                        % -- Since axislen is already in x-component, we only have
+                        % -- to multiply with 2 to get distance between them
+                        % -- -> see https://en.wikipedia.org/wiki/Barycenter_(astronomy)#Two-body_problem
 
-                    
-                    \draw[
-                        gray,
-                        dashed,
-                        thick,
-                        opacity=0.5,
-                        yscale=1-\cbcframes@Eccentricity,
-                    ] (com) circle(0.5*\cbcframes@binary@scalefactor*\cbcframes@AxisLen cm) {};
-                    
-                    \node[
-                        fill,
-                        circle,
-                        minimum size={\cbcframes@MassOne*\cbcframes@BHsizepersolmass},
-                        inner sep=0pt,
-                    % ] at (com)++(bhonepositioncom) {};
-                    ] at (bhonepositioncom) {};
-                    
-                    \node[
-                        fill,
-                        circle,
-                        minimum size={\cbcframes@MassTwo*\cbcframes@BHsizepersolmass},
-                        inner sep=0pt,
-                    % ] at (bhtwoposition) {};
-                    ] at (bhtwopositioncom) {};
-                \end{scope}
+                        
+                        \draw[
+                            gray,
+                            dashed,
+                            thick,
+                            opacity=0.5,
+                            yscale=1-\cbcframes@Eccentricity,
+                        ] (com) circle(0.5*\cbcframes@binary@scalefactor*\cbcframes@AxisLen cm) {};
+                        
+                        \node[
+                            fill,
+                            circle,
+                            minimum size={\cbcframes@MassOne*\cbcframes@BHsizepersolmass},
+                            inner sep=0pt,
+                        % ] at (com)++(bhonepositioncom) {};
+                        ] at (bhonepositioncom) {};
+                        
+                        \node[
+                            fill,
+                            circle,
+                            minimum size={\cbcframes@MassTwo*\cbcframes@BHsizepersolmass},
+                            inner sep=0pt,
+                        % ] at (bhtwoposition) {};
+                        ] at (bhtwopositioncom) {};
+                    \end{scope}
+                }{}
     
     
                 % -- Source frame axes definition + drawing
@@ -582,48 +620,52 @@
                     % -- Visualization of inclination
                     \ifnum\cbcframes@Inclination=0
                     \else
-                        \begin{scope}[
-                            rotate around z=-\cbcframes@PhiRef,
-                            rotate around x=-\cbcframes@Inclination,
-                            rotate around y=-90,
-                            cbcframes@inclinationcolor,
-                        ]
-                            \draw[angle] (binaryposition) -- (zprimetip) arc (0:-\cbcframes@Inclination:\cbcframes@AxisLen);
-                            
-                            \draw[
-                                layer=angles,
-                                ->,
-                                thick,
-                            ] (zprimetip) arc (0:-\cbcframes@Inclination:\cbcframes@AxisLen);
+                        \ifthenelse{\equal{\cbcframes@Inclination@Show}{true}}{
+                            \begin{scope}[
+                                rotate around z=-\cbcframes@PhiRef,
+                                rotate around x=-\cbcframes@Inclination,
+                                rotate around y=-90,
+                                cbcframes@inclinationcolor,
+                            ]
+                                \draw[angle] (binaryposition) -- (zprimetip) arc (0:-\cbcframes@Inclination:\cbcframes@AxisLen);
+                                
+                                \draw[
+                                    layer=angles,
+                                    ->,
+                                    thick,
+                                ] (zprimetip) arc (0:-\cbcframes@Inclination:\cbcframes@AxisLen);
 
-                            \draw[
-                                layer=angles,
-                                draw=none,
-                            ] (${(1+\cbcframes@AxisLabelPad)}*(zprimetip)$) arc (0:-\cbcframes@Inclination:{(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}) node[midway] {\cbcframes@Inclination@Label};
-                        \end{scope}
+                                \draw[
+                                    layer=angles,
+                                    draw=none,
+                                ] (${(1+\cbcframes@AxisLabelPad)}*(zprimetip)$) arc (0:-\cbcframes@Inclination:{(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}) node[midway] {\cbcframes@Inclination@Label};
+                            \end{scope}
+                        }{}
                     \fi
         
         
                     % -- Visualization of PhiRef
                     \ifnum\cbcframes@PhiRef=0
                     \else
-                        \draw[angle, cbcframes@phirefcolor] (binaryposition) -- (xtip) arc (0:-\cbcframes@PhiRef:\cbcframes@AxisLen);
-                        
-                        \draw[
-                            layer=angles,
-                            <-,
-                            thick,
-                            cbcframes@phirefcolor,
-                        ] (binaryposition) ++(xtip) arc (0:-\cbcframes@PhiRef:\cbcframes@AxisLen);
+                        \ifthenelse{\equal{\cbcframes@PhiRef@Show}{true}}{
+                            \draw[angle, cbcframes@phirefcolor] (binaryposition) -- (xtip) arc (0:-\cbcframes@PhiRef:\cbcframes@AxisLen);
+                            
+                            \draw[
+                                layer=angles,
+                                <-,
+                                thick,
+                                cbcframes@phirefcolor,
+                            ] (binaryposition) ++(xtip) arc (0:-\cbcframes@PhiRef:\cbcframes@AxisLen);
 
-                        \draw[
-                            layer=angles,
-                            draw=none,
-                            cbcframes@phirefcolor,
-                        ] (binaryposition) ++(${(1+\cbcframes@AxisLabelPad)}*(xtip)$) arc (0:-\cbcframes@PhiRef:{(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}) node[midway] {\cbcframes@PhiRef@Label};
+                            \draw[
+                                layer=angles,
+                                draw=none,
+                                cbcframes@phirefcolor,
+                            ] (binaryposition) ++(${(1+\cbcframes@AxisLabelPad)}*(xtip)$) arc (0:-\cbcframes@PhiRef:{(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}) node[midway] {\cbcframes@PhiRef@Label};
+                        }{}
                     \fi
 
-                    \ifthenelse{\equal{\cbcframes@Signalframe@AzimuthalAngle}{true}}{
+                    \ifthenelse{\equal{\cbcframes@Signalframe@AzimuthalAngle@Show}{true}}{
                         % -- Visualize phiN from Fig. 1 of https://www.nature.com/articles/s41550-025-02632-5
                         \begin{scope}[
                             layer=angles,
@@ -668,7 +710,7 @@
     
     
                 % -- Helper lines
-    	        \ifthenelse{\equal{\cbcframes@Sourceframe@Helperlines}{true}}{
+                \ifthenelse{\equal{\cbcframes@Sourceframe@Helperlines}{true}}{
                     \begin{scope}[
                         canvas is xy plane at z=0,
                     ]
@@ -678,64 +720,68 @@
             \end{scope}
 
 
-        % -- Visualization of line of ascending node
-        \ifthenelse{\equal{\cbcframes@Signalframe@Axes}{true} \and \equal{\cbcframes@SignalFrame@AscNode@Show}{true}}{
-            \draw[
-                layer=axes,
-                ->,
-            % ] (binaryposition) -- (\cbcframes@AxisLen, 0, 0) node[anchor=north]{AscNodeLabel};
-            % -- TODO: maybe move label to other place if longascnodes = 0? Then this here coincides with y'
-            % -- -> better solution: elongate line that indicates ascending node
-            ] (binaryposition) -- (1.25*\cbcframes@AxisLen, 0, 0) node[pos=1+\cbcframes@AxisLabelPad]{\cbcframes@AscNode@Label};
-        }{}
+            % -- Visualization of line of ascending node
+            \ifthenelse{\equal{\cbcframes@Signalframe@Axes}{true} \and \equal{\cbcframes@SignalFrame@AscNode@Show}{true}}{
+                \draw[
+                    layer=axes,
+                    ->,
+                % ] (binaryposition) -- (\cbcframes@AxisLen, 0, 0) node[anchor=north]{AscNodeLabel};
+                % -- TODO: maybe move label to other place if longascnodes = 0? Then this here coincides with y'
+                % -- -> better solution: elongate line that indicates ascending node
+                ] (binaryposition) -- (1.25*\cbcframes@AxisLen, 0, 0) node[pos=1+\cbcframes@AxisLabelPad]{\cbcframes@AscNode@Label};
+            }{}
         \end{scope}
 
         \ifthenelse{\equal{\cbcframes@Signalframe@Angles}{true}}{
             % -- Visualization of LongAscOmega
             \ifnum\LongAscNodes=-90 % Doing this with LongAscOmega = 0 does not work, must be due to use of \def
             \else
-                \draw[angle, cbcframes@longasccolor] (binaryposition) -- (xprimetip) arc
-                (0:\LongAscOmega:\cbcframes@AxisLen);
-                % (0:-\LongAscOmega:\cbcframes@AxisLen);
-                
-                \draw[
-                    layer=angles,
-                    ->,
-                    thick,
-                    cbcframes@longasccolor,
-                ] (binaryposition) ++(xprimetip) arc (0:\LongAscOmega:\cbcframes@AxisLen);
-                % ] (binaryposition) ++(xprimetip) arc (0:-\LongAscOmega:\cbcframes@AxisLen);
-                
-                \draw[
-                    layer=angles,
-                    draw=none,
-                    cbcframes@longasccolor,
-                ] (binaryposition) ++(${(1+\cbcframes@AxisLabelPad)}*(xprimetip)$) arc (0:\LongAscOmega:{(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}) node[midway] {\cbcframes@Omega@Label};
-                % ] (binaryposition) ++(${(1+\cbcframes@AxisLabelPad)}*(xprimetip)$) arc (0:-\LongAscOmega:{(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}) node[midway] {\cbcframes@Omega@Label};
+                \ifthenelse{\equal{\cbcframes@LongAscNodes@Show}{true}}{
+                    \draw[angle, cbcframes@longasccolor] (binaryposition) -- (xprimetip) arc
+                    (0:\LongAscOmega:\cbcframes@AxisLen);
+                    % (0:-\LongAscOmega:\cbcframes@AxisLen);
+                    
+                    \draw[
+                        layer=angles,
+                        ->,
+                        thick,
+                        cbcframes@longasccolor,
+                    ] (binaryposition) ++(xprimetip) arc (0:\LongAscOmega:\cbcframes@AxisLen);
+                    % ] (binaryposition) ++(xprimetip) arc (0:-\LongAscOmega:\cbcframes@AxisLen);
+                    
+                    \draw[
+                        layer=angles,
+                        draw=none,
+                        cbcframes@longasccolor,
+                    ] (binaryposition) ++(${(1+\cbcframes@AxisLabelPad)}*(xprimetip)$) arc (0:\LongAscOmega:{(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}) node[midway] {\cbcframes@Omega@Label};
+                    % ] (binaryposition) ++(${(1+\cbcframes@AxisLabelPad)}*(xprimetip)$) arc (0:-\LongAscOmega:{(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}) node[midway] {\cbcframes@Omega@Label};
+                }{}
             \fi
     
             % -- Visualization of polarization
             \ifthenelse{\equal{\cbcframes@Celestialframe@Show}{true}}{
                 \ifnum\cbcframes@Polarization=0
                 \else
-                    \draw[angle, cbcframes@polarizationcolor] (binaryposition) -- (xprimetip) arc
-                    (0:-\cbcframes@Polarization:\cbcframes@AxisLen); % Counter-clockwise aroud z'
-                    % (0:\cbcframes@Polarization:\cbcframes@AxisLen); % Clockwise aroud z'
-                    
-                    \draw[
-                        layer=angles,
-                        <-,
-                        thick,
-                        cbcframes@polarizationcolor,
-                    ] (binaryposition) ++(xprimetip) arc (0:-\cbcframes@Polarization:\cbcframes@AxisLen); % Counter-clockwise around z'
-                    % ] (binaryposition) ++(xprimetip) arc (0:\cbcframes@Polarization:\cbcframes@AxisLen); % Clockwise aroud z'
+                    \ifthenelse{\equal{\cbcframes@Polarization@Show}{true}}{
+                        \draw[angle, cbcframes@polarizationcolor] (binaryposition) -- (xprimetip) arc
+                        (0:-\cbcframes@Polarization:\cbcframes@AxisLen); % Counter-clockwise aroud z'
+                        % (0:\cbcframes@Polarization:\cbcframes@AxisLen); % Clockwise aroud z'
+                        
+                        \draw[
+                            layer=angles,
+                            <-,
+                            thick,
+                            cbcframes@polarizationcolor,
+                        ] (binaryposition) ++(xprimetip) arc (0:-\cbcframes@Polarization:\cbcframes@AxisLen); % Counter-clockwise around z'
+                        % ] (binaryposition) ++(xprimetip) arc (0:\cbcframes@Polarization:\cbcframes@AxisLen); % Clockwise aroud z'
 
-                    \draw[
-                        layer=angles,
-                        draw=none,
-                        cbcframes@polarizationcolor,
-                    ] (binaryposition) ++(${(1+\cbcframes@AxisLabelPad)}*(xprimetip)$) arc (0:-\cbcframes@Polarization:{(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}) node[midway] {\cbcframes@Polarization@Label}; % Counter-clockwise around z'
-                    % ] (binaryposition) ++(${(1+\cbcframes@AxisLabelPad)}*(xprimetip)$) arc (0:\cbcframes@Polarization:{(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}) node[midway] {\cbcframes@Polarization@Label}; % Clockwise around z'
+                        \draw[
+                            layer=angles,
+                            draw=none,
+                            cbcframes@polarizationcolor,
+                        ] (binaryposition) ++(${(1+\cbcframes@AxisLabelPad)}*(xprimetip)$) arc (0:-\cbcframes@Polarization:{(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}) node[midway] {\cbcframes@Polarization@Label}; % Counter-clockwise around z'
+                        % ] (binaryposition) ++(${(1+\cbcframes@AxisLabelPad)}*(xprimetip)$) arc (0:\cbcframes@Polarization:{(1+\cbcframes@AxisLabelPad)*\cbcframes@AxisLen}) node[midway] {\cbcframes@Polarization@Label}; % Clockwise around z'
+                    }{}
                 \fi
             }{}
         }{}
