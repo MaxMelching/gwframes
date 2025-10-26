@@ -50,6 +50,18 @@
         opacity=0.5,
         layer=BackGround,
     },
+    helper lines 2/.style={
+        % thin,
+        % black,
+        % gray!70!black,
+        % % red,
+        % % dotted,
+        % opacity=0.5,
+        % layer=BackGround,
+        helper lines,
+        thin,
+        solid,
+    },
 }
 
 
@@ -435,6 +447,20 @@
             \draw[coordinate axis] (earthpos) -- ++(zdoubleprimetip) node[pos=1+\cbcframes@AxisLabelPad]{$z''$};
 
 
+
+            \ifthenelse{\equal{\cbcframes@Celestialframe@Helperlines}{true}}{
+                \begin{scope}[
+                    canvas is xy plane at z=0,
+                ]
+                    \draw[helper lines] (0.0, 0.0, 0.0) circle(\cbcframes@AxisLen cm) {};
+                \end{scope}
+
+                \draw[helper lines 2] (0.1*\cbcframes@AxisLen, 0, 0) -- (0.1*\cbcframes@AxisLen, 0.1*\cbcframes@AxisLen, 0) -- (0, 0.1*\cbcframes@AxisLen, 0) {};
+                \draw[helper lines 2] (0.1*\cbcframes@AxisLen, 0, 0) -- (0.1*\cbcframes@AxisLen, 0, 0.1*\cbcframes@AxisLen) -- (0, 0, 0.1*\cbcframes@AxisLen) {};
+                \draw[helper lines 2] (0, 0.1*\cbcframes@AxisLen, 0) -- (0, 0.1*\cbcframes@AxisLen, 0.1*\cbcframes@AxisLen) -- (0, 0, 0.1*\cbcframes@AxisLen) {};
+            }{}
+
+
             \ifthenelse{\equal{\cbcframes@Celestialframe@Angles}{true}}{
                 % -- Visualization of dec
                 \ifnum\cbcframes@Dec=0
@@ -543,6 +569,13 @@
             ]
                 \draw[helper lines] (0.0, 0.0, 0.0) circle(\cbcframes@AxisLen cm) {};
             \end{scope}
+
+            \draw[helper lines 2] (0.1*\cbcframes@AxisLen, 0, 0) -- (0.1*\cbcframes@AxisLen, 0.1*\cbcframes@AxisLen, 0) -- (0, 0.1*\cbcframes@AxisLen, 0) {};
+            \draw[helper lines 2] (0.1*\cbcframes@AxisLen, 0, 0) -- (0.1*\cbcframes@AxisLen, 0, 0.1*\cbcframes@AxisLen) -- (0, 0, 0.1*\cbcframes@AxisLen) {};
+            % \draw[helper lines 2, fill] (0, 0.1*\cbcframes@AxisLen, 0) -- (0, 0.1*\cbcframes@AxisLen, 0.1*\cbcframes@AxisLen) -- (0, 0, 0.1*\cbcframes@AxisLen)
+            % % to [move to] (0, 0, 0) to[move to] (0, 0.1*\cbcframes@AxisLen, 0) {};
+            % -- (0, 0, 0) -- (0, 0.1*\cbcframes@AxisLen, 0) {};
+            \draw[helper lines 2] (0, 0.1*\cbcframes@AxisLen, 0) -- (0, 0.1*\cbcframes@AxisLen, 0.1*\cbcframes@AxisLen) -- (0, 0, 0.1*\cbcframes@AxisLen);
         }{}
 
 
@@ -716,6 +749,10 @@
                     ]
                         \draw[helper lines] (0.0, 0.0, 0.0) circle(\cbcframes@AxisLen cm) {};
                     \end{scope}
+
+                    \draw[helper lines 2] (0.1*\cbcframes@AxisLen, 0, 0) -- (0.1*\cbcframes@AxisLen, 0.1*\cbcframes@AxisLen, 0) -- (0, 0.1*\cbcframes@AxisLen, 0) {};
+                    \draw[helper lines 2] (0.1*\cbcframes@AxisLen, 0, 0) -- (0.1*\cbcframes@AxisLen, 0, 0.1*\cbcframes@AxisLen) -- (0, 0, 0.1*\cbcframes@AxisLen) {};
+                    \draw[helper lines 2] (0, 0.1*\cbcframes@AxisLen, 0) -- (0, 0.1*\cbcframes@AxisLen, 0.1*\cbcframes@AxisLen) -- (0, 0, 0.1*\cbcframes@AxisLen) {};
                 }{}
             \end{scope}
 
