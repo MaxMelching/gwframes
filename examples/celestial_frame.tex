@@ -17,14 +17,28 @@
 	        polarization=-42,
 	        ra=75,
 	        dec=25,
-	        eccentricity=0.4,
-	        signalframeaxes=false,
-	        signalframehelperlines=false,
-	        signalframeangles=false,
-	        sourceframeaxes=false,
-	        sourceframehelperlines=false,
-	        earthradius=1.1,
+			binary={
+				eccentricity=0.4,
+			},
+	        signalframe={
+				axes=false,
+				helperlines=false,
+				angles=false,
+			},
+	        sourceframe={
+				axes=false,
+				helperlines=false,
+			},
+			celestialframe={
+				show=true,
+				angles=true,
+			},
+	        % earth={radius=1.1},
+	        earth=1.1,
 			axislabelpad=0.16,
+			% -- For less clutter, you can disable some options
+			% lineofsight=false,
+			% distance={show=false},
 	    ];
 	\end{tikzpicture}
 

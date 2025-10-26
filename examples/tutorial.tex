@@ -1,0 +1,98 @@
+\documentclass[
+	tikz,
+	border=3pt,
+]{standalone}
+
+
+\usepackage{cbc_frames_tikz}
+
+
+
+\begin{document}
+
+% -- Let's create the exact same picture in different ways
+
+
+% -- V1: Using sub-families
+\begin{tikzpicture}
+	\drawframes[%
+		binary={
+			eccentricity=0.5,
+		},
+        distance={
+            value=4,
+            show=false,
+        },
+		angles={
+            inclination=16,
+            polarization=60,
+            polarization={value=60, show=false},
+            longascnodes=16,
+            phiref=20,
+            ra=-110,
+            dec=16,
+		},
+		earth={
+            radius=1.4,
+        },
+		% -- In case you want to show a specific azimuthal angle, enable the following:
+		signalframe={azimuthalangle=true},
+		% -- To adjust labels, use the following
+		labels={
+			omega={$\Omega = \pi/2 + longAscNodes$},  % Unfortunately, \mathrm{longAscNodes} throws error
+		},
+	];
+
+	\node[text width=12cm, align=center] at (-4,-2) {Comparison Of All Frames: Celestial Frame $(x'')^\mu$, Signal Frame $(x')^\mu$, Source Frame $x^\mu$.};
+\end{tikzpicture}
+
+
+
+% -- V2: Accessing sub-family keys directly, using the pgfkeys logic that allows passing to a sub-family by passing "/subfamily/key=value"
+\begin{tikzpicture}
+	\drawframes[%
+        distance/value=4,
+        distance/show=false,
+        binary/eccentricity=0.5,
+        angles/inclination=16,  % Equivalent: inclination/value=16
+        angles/polarization=60,  % Equivalent: polarization/value=60
+        angles/longascnodes=16,  % Equivalent: longascnodes/value=16
+        phiref/value=20,  % Equivalent: angles/phiref=20
+        ra/value=-110,  % Equivalent: angles/ra=-110
+        dec/value=16,  % Equivalent: angles/dec=16
+        polarization/show=false,  % angles/polarization/show=false does not work
+		earth=1.4,
+		% -- In case you want to show a specific azimuthal angle, enable the following:
+		signalframe/azimuthalangle=true,
+		% -- To adjust labels, use the following
+        labels/omega={$\Omega = \pi/2 + longAscNodes$},  % Unfortunately, \mathrm{longAscNodes} throws error. Equivalent: longascnodes/omegalabel={$\Omega = \pi/2 + longAscNodes$}
+	];
+
+	\node[text width=12cm, align=center] at (-4,-2) {Comparison Of All Frames: Celestial Frame $(x'')^\mu$, Signal Frame $(x')^\mu$, Source Frame $x^\mu$.};
+\end{tikzpicture}
+
+
+
+% -- V3: Passing keys directly, when possible (using V1 elsewhere)
+\begin{tikzpicture}
+	\drawframes[%
+        distance=4,
+        distance/show=false,
+        eccentricity=0.5,
+        inclination=16,
+        polarization=60,
+        polarization/show=false,
+        longascnodes=16,
+        phiref=20,
+        ra=-110,
+        dec=16,
+		earth=1.4,
+		% -- In case you want to show a specific azimuthal angle, enable the following:
+		azimuthalangle=true,
+		% -- To adjust labels, use the following
+        longascnodes/omegalabel={$\Omega = \pi/2 + longAscNodes$},  % Unfortunately, \mathrm{longAscNodes} throws error
+	];
+
+	\node[text width=12cm, align=center] at (-4,-2) {Comparison Of All Frames: Celestial Frame $(x'')^\mu$, Signal Frame $(x')^\mu$, Source Frame $x^\mu$.};
+\end{tikzpicture}
+\end{document}

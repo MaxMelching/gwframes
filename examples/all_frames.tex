@@ -9,32 +9,17 @@
 
 
 \begin{document}
-
-
-% \pgfkeys{/frames,
-% 	inclination=50,
-% 	longascnodes=20,
-% 	uselayers=true,
-% }
-
-% \pgfkeys{/frames, default}
-
-
-% \Inclination, \LongAscNodes, \UseLayers
-
-
 \begin{tikzpicture}
 	\drawframes[%
+		distance=4,
+		eccentricity=0.5,
 		inclination=16,
 		polarization=60,
 		longascnodes=16,
 		phiref=20,
 		ra=-110,
 		dec=16,
-		eccentricity=0.5,
-		binarydistance=4,
-		earthradius=1.4,
-		% showazimuthalangle=true,
+		earth=1.4,
 	];
 
 	\node[text width=12cm, align=center] at (-4,-2) {Comparison Of All Frames: Celestial Frame $(x'')^\mu$, Signal Frame $(x')^\mu$, Source Frame $x^\mu$.};

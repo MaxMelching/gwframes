@@ -11,12 +11,13 @@
 \begin{document}
 \begin{tikzpicture}
 	\drawframes[%
+		eccentricity=0.5,
 		inclination=30,
 		longascnodes=-24,
 		phiref=42,
-		eccentricity=0.5,
-		showcelestialframe=false,
+		celestialframe=false,
 		axislabelpad=0.16,
+		% ascnode=false,
 	];
 	
 	\node[text width=10cm, align=center] at (-4, -6) {Signal Frame $(x')^\mu$ vs.~Source Frame $x^\mu$. The three Euler angles are $\mathrm{longAscNodes} = -24 = \Omega - 90, \iota = 30, \phi_\mathrm{ref} = 42$.};
