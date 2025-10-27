@@ -11,6 +11,7 @@
 \RequirePackage{tikz}
 \RequirePackage{tikz-3dplot}
 \RequirePackage{xcolor}
+\RequirePackage{etoolbox}
 
 
 \usetikzlibrary{
@@ -159,7 +160,8 @@
                 cbcbinary@lcolor,
                 ] (center) -- (angularmomentum) node[left]{$\vec{L}_N$};
 
-            \ifthenelse{\equal{\cbcbinary@ShowCombinedQuantities}{true}}{
+            % \ifthenelse{\equal{\cbcbinary@ShowCombinedQuantities}{true}}{
+            \ifdefstring{\cbcbinary@ShowCombinedQuantities}{true}{
                 \draw[
                     ->,
                     thick,

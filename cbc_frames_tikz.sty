@@ -12,6 +12,7 @@
 \RequirePackage{tikz-3dplot}
 \RequirePackage{xcolor}
 \RequirePackage{wasysym}  % For \ascnode symbol
+\RequirePackage{etoolbox}
 
 \RequirePackage{earth_tikz}
 
@@ -250,6 +251,7 @@
     %
     sourceframe/show/.code = {%
         \ifthenelse{\equal{#1}{false}}{%
+        % \ifdefstring{#1}{false}{%
             % -- Only overwrite stuff if set to false
             \def\cbcframes@Binary@Show{false}%
             \def\cbcframes@Sourceframe@Axes{false}%
@@ -261,6 +263,7 @@
     %
     signalframe/show/.code = {%
         \ifthenelse{\equal{#1}{false}}{%
+        % \ifdefstring{#1}{false}{%
             % -- Only overwrite stuff if set to false
             % \def\cbcframes@Binary@Show{false}%
             \def\cbcframes@Signalframe@Axes{false}%
@@ -376,12 +379,12 @@
     \pgfsetlayers{BackGround,angles,main,axes,ForeGround} % Order from back to front
 
     % -- Check whether layers shall be used
-    \ifthenelse{\equal{\cbcframes@UseLayers}{false}}{
+    \ifdefstring{\cbcframes@UseLayers}{false}{
         \tikzset{layer/.style={}}
     }{}
 
 
-    \ifthenelse{\equal{\cbcframes@Celestialframe@Show}{true}}{
+    \ifdefstring{\cbcframes@Celestialframe@Show}{true}{
         % -- Draw earth
         \coordinate (earthpos) at (0, 0, 0);
 
@@ -393,7 +396,7 @@
             \drawearth;
 
             % -- Draw interferometer on earth
-            \ifthenelse{\equal{\cbcframes@IFO@Show}{true}}{
+            \ifdefstring{\cbcframes@IFO@Show}{true}{
                 \begin{scope}[
                     tdplot_screen_coords,
                     shift={(-0.12, 0.55)},
@@ -447,7 +450,7 @@
 
 
             % -- Helper lines
-            \ifthenelse{\equal{\cbcframes@Celestialframe@Helperlines}{true}}{
+            \ifdefstring{\cbcframes@Celestialframe@Helperlines}{true}{
                 \begin{scope}[
                     canvas is xy plane at z=0,
                 ]
@@ -461,11 +464,11 @@
             }{}
 
 
-            \ifthenelse{\equal{\cbcframes@Celestialframe@Angles}{true}}{
+            \ifdefstring{\cbcframes@Celestialframe@Angles}{true}{
                 % -- Visualization of dec
                 \ifnum\cbcframes@Dec=0
                 \else
-                    \ifthenelse{\equal{\cbcframes@Dec@Show}{true}}{
+                    \ifdefstring{\cbcframes@Dec@Show}{true}{
                         \begin{scope}[
                             rotate around z=\cbcframes@Ra,
                             rotate around x=-90,
@@ -491,7 +494,7 @@
                 % -- Visualization of ra
                 \ifnum\cbcframes@Ra=0
                 \else
-                    \ifthenelse{\equal{\cbcframes@Ra@Show}{true}}{
+                    \ifdefstring{\cbcframes@Ra@Show}{true}{
                         \begin{scope}[
                             cbcframes@racolor,
                         ]
@@ -529,6 +532,7 @@
 
     % -- Shift to really go into signal frame, in addition to rotation
     \ifthenelse{\equal{\cbcframes@Celestialframe@Show}{true}}{
+    % \ifdefstring{\cbcframes@Celestialframe@Show}{true}{
         % -- Apply rotations
         \begin{scope}[
             tdplot_main_coords,
@@ -553,7 +557,7 @@
         \coordinate (yprimetip) at (0, \cbcframes@AxisLen, 0);
         \coordinate (zprimetip) at (0, 0, \cbcframes@AxisLen);
 
-        \ifthenelse{\equal{\cbcframes@Signalframe@Axes}{true}}{
+        \ifdefstring{\cbcframes@Signalframe@Axes}{true}{
             \draw[coordinate axis]
                 (binaryposition) -- (xprimetip) node[pos=1+\cbcframes@AxisLabelPad]{$x'$}
                 (binaryposition) -- (yprimetip) node[pos=1+\cbcframes@AxisLabelPad]{$y'$}
@@ -562,7 +566,7 @@
 
 
         % -- Helper lines
-        \ifthenelse{\equal{\cbcframes@Signalframe@Helperlines}{true}}{
+        \ifdefstring{\cbcframes@Signalframe@Helperlines}{true}{
             \begin{scope}[
                 canvas is xy plane at z=0,
             ]
@@ -585,7 +589,7 @@
                 rotate around x=\cbcframes@Inclination,
                 rotate around z=\cbcframes@PhiRef,
             ]
-                \ifthenelse{\equal{\cbcframes@Binary@Show}{true}}{
+                \ifdefstring{\cbcframes@Binary@Show}{true}{
                     \begin{scope}[
                         canvas is xy plane at z=0, % Needed for rotation of circle to work properly
                     ]
@@ -637,7 +641,7 @@
                 \coordinate (ytip) at (0, \cbcframes@AxisLen, 0);
                 \coordinate (ztip) at (0, 0, \cbcframes@AxisLen);
 
-                \ifthenelse{\equal{\cbcframes@Sourceframe@Axes}{true}}{
+                \ifdefstring{\cbcframes@Sourceframe@Axes}{true}{
                     \draw[coordinate axis]
                         (binaryposition) -- (xtip) node[pos=1+\cbcframes@AxisLabelPad]{$x$}
                         (binaryposition) -- (ytip) node[pos=1+\cbcframes@AxisLabelPad]{$y$}
@@ -645,11 +649,11 @@
                 }{}
 
 
-                \ifthenelse{\equal{\cbcframes@Signalframe@Angles}{true}}{
+                \ifdefstring{\cbcframes@Signalframe@Angles}{true}{
                     % -- Visualization of inclination
                     \ifnum\cbcframes@Inclination=0
                     \else
-                        \ifthenelse{\equal{\cbcframes@Inclination@Show}{true}}{
+                        \ifdefstring{\cbcframes@Inclination@Show}{true}{
                             \begin{scope}[
                                 rotate around z=-\cbcframes@PhiRef,
                                 rotate around x=-\cbcframes@Inclination,
@@ -676,7 +680,7 @@
                     % -- Visualization of PhiRef
                     \ifnum\cbcframes@PhiRef=0
                     \else
-                        \ifthenelse{\equal{\cbcframes@PhiRef@Show}{true}}{
+                        \ifdefstring{\cbcframes@PhiRef@Show}{true}{
                             \draw[angle, cbcframes@phirefcolor] (binaryposition) -- (xtip) arc (0:-\cbcframes@PhiRef:\cbcframes@AxisLen);
 
                             \draw[
@@ -696,7 +700,7 @@
 
 
                     % -- Visualize phiN from Fig. 1 of https://www.nature.com/articles/s41550-025-02632-5
-                    \ifthenelse{\equal{\cbcframes@Signalframe@AzimuthalAngle@Show}{true}}{
+                    \ifdefstring{\cbcframes@Signalframe@AzimuthalAngle@Show}{true}{
                         \begin{scope}[
                             layer=angles,
                             rotate around z=90-\cbcframes@PhiRef,
@@ -733,7 +737,7 @@
 
 
                 % -- Helper lines
-                \ifthenelse{\equal{\cbcframes@Sourceframe@Helperlines}{true}}{
+                \ifdefstring{\cbcframes@Sourceframe@Helperlines}{true}{
                     \begin{scope}[
                         canvas is xy plane at z=0,
                     ]
@@ -749,23 +753,26 @@
 
 
             % -- Visualization of line of ascending node
-            \ifthenelse{\equal{\cbcframes@Signalframe@Axes}{true} \and \equal{\cbcframes@SignalFrame@AscNode@Show}{true}}{
-                \draw[
-                    layer=axes,
-                    ->,
-                % ] (binaryposition) -- (\cbcframes@AxisLen, 0, 0) node[anchor=north]{AscNodeLabel};
-                % -- TODO: maybe move label to other place if longascnodes = 0? Then this here coincides with y'
-                % -- -> better solution: elongate line that indicates ascending node
-                ] (binaryposition) -- (1.25*\cbcframes@AxisLen, 0, 0) node[pos=1+\cbcframes@AxisLabelPad]{\cbcframes@AscNode@Label};
+            % \ifthenelse{\equal{\cbcframes@Signalframe@Axes}{true} \and \equal{\cbcframes@SignalFrame@AscNode@Show}{true}}{
+            \ifdefstring{\cbcframes@Signalframe@Axes}{true}{
+                \ifdefstring{\cbcframes@SignalFrame@AscNode@Show}{true}{
+                    \draw[
+                        layer=axes,
+                        ->,
+                    % ] (binaryposition) -- (\cbcframes@AxisLen, 0, 0) node[anchor=north]{AscNodeLabel};
+                    % -- TODO: maybe move label to other place if longascnodes = 0? Then this here coincides with y'
+                    % -- -> better solution: elongate line that indicates ascending node
+                    ] (binaryposition) -- (1.25*\cbcframes@AxisLen, 0, 0) node[pos=1+\cbcframes@AxisLabelPad]{\cbcframes@AscNode@Label};
+                }{}
             }{}
         \end{scope}
 
 
-        \ifthenelse{\equal{\cbcframes@Signalframe@Angles}{true}}{
+        \ifdefstring{\cbcframes@Signalframe@Angles}{true}{
             % -- Visualization of LongAscOmega
             \ifnum\LongAscNodes=-90 % Doing this with LongAscOmega = 0 does not work, must be due to use of \def
             \else
-                \ifthenelse{\equal{\cbcframes@LongAscNodes@Show}{true}}{
+                \ifdefstring{\cbcframes@LongAscNodes@Show}{true}{
                     \draw[angle, cbcframes@longasccolor] (binaryposition) -- (xprimetip) arc
                     (0:\LongAscOmega:\cbcframes@AxisLen);
                     % (0:-\LongAscOmega:\cbcframes@AxisLen);
@@ -789,10 +796,10 @@
 
 
             % -- Visualization of polarization
-            \ifthenelse{\equal{\cbcframes@Celestialframe@Show}{true}}{
+            \ifdefstring{\cbcframes@Celestialframe@Show}{true}{
                 \ifnum\cbcframes@Polarization=0
                 \else
-                    \ifthenelse{\equal{\cbcframes@Polarization@Show}{true}}{
+                    \ifdefstring{\cbcframes@Polarization@Show}{true}{
                         \draw[angle, cbcframes@polarizationcolor] (binaryposition) -- (xprimetip) arc
                         (0:-\cbcframes@Polarization:\cbcframes@AxisLen); % Counter-clockwise aroud z'
                         % (0:\cbcframes@Polarization:\cbcframes@AxisLen); % Clockwise aroud z'
@@ -818,11 +825,12 @@
 
     \end{scope}
     \ifthenelse{\equal{\cbcframes@Celestialframe@Show}{true}}{
+    % \ifdefstring{\cbcframes@Celestialframe@Show}{true}{
         \end{scope}
     }{}
 
 
-	\ifthenelse{\equal{\cbcframes@Celestialframe@Show}{true}}{
+	\ifdefstring{\cbcframes@Celestialframe@Show}{true}{
         % -- Visualization of relation between celestial and signal frame
         \begin{scope}[
             % layer=angles,
@@ -836,7 +844,7 @@
             % \ifnum\cbcframes@Decra>0
             % \ifdim\cbcframes@Decrasignum pt>0 pt
             \ifnum\cbcframes@Ra<0
-                \ifthenelse{\equal{\cbcframes@LineOfSight@Show}{true}}{
+                \ifdefstring{\cbcframes@LineOfSight@Show}{true}{
                     \draw[
                         ->,
                         layer=angles,
@@ -844,7 +852,7 @@
                 }{}
 
 
-                \ifthenelse{\equal{\cbcframes@Distance@show}{true}}{
+                \ifdefstring{\cbcframes@Distance@show}{true}{
 	                \draw[
 	                    decorate,
 	                    decoration={
@@ -856,14 +864,14 @@
 	                ] (earthpos) -- (binaryposition) node[midway, sloped, below=10]{\cbcframes@Distance@Label};
                 }{}
             \else
-                \ifthenelse{\equal{\cbcframes@LineOfSight@Show}{true}}{
+                \ifdefstring{\cbcframes@LineOfSight@Show}{true}{
                     \draw[
                         ->,
                     ] (earthpos) -- (binaryposition) node[midway, sloped, below]{\cbcframes@LineOfSight@Label};
                 }{}
 
 
-                \ifthenelse{\equal{\cbcframes@Distance@show}{true}}{
+                \ifdefstring{\cbcframes@Distance@show}{true}{
 	                \draw[
 	                    decorate,
 	                    decoration={
