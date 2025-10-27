@@ -109,7 +109,7 @@
             mass1 = 20,
             mass2 = 10,
             eccentricity = 0,
-            scalefactor = 1,
+            separation = 1,
         },
         distance = {%
             value = 3,
@@ -188,7 +188,7 @@
     mass2/.estore in = \cbcframes@MassTwo,
     binary/eccentricity/.estore in = \cbcframes@Eccentricity,
     eccentricity/.estore in = \cbcframes@Eccentricity,
-    binary/scalefactor/.estore in = \cbcframes@binary@scalefactor,
+    binary/separation/.estore in = \cbcframes@binary@separation,
     binary/distance/.estore in = \cbcframes@Distance,
     binary/bhsizepersolmass/.estore in = \cbcframes@BHsizepersolmass,
     bhsizepersolmass/.estore in = \cbcframes@BHsizepersolmass,
@@ -593,8 +593,8 @@
                     \begin{scope}[
                         canvas is xy plane at z=0, % Needed for rotation of circle to work properly
                     ]
-                        \coordinate (bhoneposition) at (0.5*\cbcframes@binary@scalefactor*\cbcframes@AxisLen, 0, 0);
-                        \coordinate (bhtwoposition) at (-0.5*\cbcframes@binary@scalefactor*\cbcframes@AxisLen, 0, 0);
+                        \coordinate (bhoneposition) at (0.5*\cbcframes@binary@separation*\cbcframes@AxisLen, 0, 0);
+                        \coordinate (bhtwoposition) at (-0.5*\cbcframes@binary@separation*\cbcframes@AxisLen, 0, 0);
 
                         % -- Following may be overly complicated, but it works
                         \coordinate (bhonepositionresc) at ($ {\cbcframes@MassTwo/(\cbcframes@MassOne+\cbcframes@MassTwo)}*(bhoneposition) $);
@@ -615,7 +615,7 @@
                             thick,
                             opacity=0.5,
                             yscale=1-\cbcframes@Eccentricity,
-                        ] (com) circle(0.5*\cbcframes@binary@scalefactor*\cbcframes@AxisLen cm) {};
+                        ] (com) circle(0.5*\cbcframes@binary@separation*\cbcframes@AxisLen cm) {};
 
                         \node[
                             fill,
