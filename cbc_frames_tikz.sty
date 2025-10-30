@@ -443,10 +443,9 @@
             \coordinate (ydoubleprimetip) at (0, \cbcframes@AxisLen, 0);
             \coordinate (zdoubleprimetip) at (0, 0, \cbcframes@AxisLen);
 
-            \draw[coordinate axis]
-                (earthpos) -- ++(xdoubleprimetip) node[pos=1+\cbcframes@AxisLabelPad]{$x''$}
-                (earthpos) -- ++(ydoubleprimetip) node[pos=1+\cbcframes@AxisLabelPad]{$y''$}
-                (earthpos) -- ++(zdoubleprimetip) node[pos=1+\cbcframes@AxisLabelPad]{$z''$};
+            \draw[coordinate axis] (earthpos) -- ++(xdoubleprimetip) node[pos=1+\cbcframes@AxisLabelPad]{$x''$};
+            \draw[coordinate axis] (earthpos) -- ++(ydoubleprimetip) node[pos=1+\cbcframes@AxisLabelPad]{$y''$};
+            \draw[coordinate axis] (earthpos) -- ++(zdoubleprimetip) node[pos=1+\cbcframes@AxisLabelPad]{$z''$};
 
 
             % -- Helper lines
@@ -558,10 +557,9 @@
         \coordinate (zprimetip) at (0, 0, \cbcframes@AxisLen);
 
         \ifdefstring{\cbcframes@Signalframe@Axes}{true}{
-            \draw[coordinate axis]
-                (binaryposition) -- (xprimetip) node[pos=1+\cbcframes@AxisLabelPad]{$x'$}
-                (binaryposition) -- (yprimetip) node[pos=1+\cbcframes@AxisLabelPad]{$y'$}
-                (binaryposition) -- (zprimetip) node[pos=1+\cbcframes@AxisLabelPad]{$z'$};
+            \draw[coordinate axis] (binaryposition) -- (xprimetip) node[pos=1+\cbcframes@AxisLabelPad]{$x'$};
+            \draw[coordinate axis] (binaryposition) -- (yprimetip) node[pos=1+\cbcframes@AxisLabelPad]{$y'$};
+            \draw[coordinate axis] (binaryposition) -- (zprimetip) node[pos=1+\cbcframes@AxisLabelPad]{$z'$};
         }{}
 
 
@@ -642,10 +640,9 @@
                 \coordinate (ztip) at (0, 0, \cbcframes@AxisLen);
 
                 \ifdefstring{\cbcframes@Sourceframe@Axes}{true}{
-                    \draw[coordinate axis]
-                        (binaryposition) -- (xtip) node[pos=1+\cbcframes@AxisLabelPad]{$x$}
-                        (binaryposition) -- (ytip) node[pos=1+\cbcframes@AxisLabelPad]{$y$}
-                        (binaryposition) -- (ztip) node[pos=1+\cbcframes@AxisLabelPad]{$z$};
+                    \draw[coordinate axis] (binaryposition) -- (xtip) node[pos=1+\cbcframes@AxisLabelPad]{$x$};
+                    \draw[coordinate axis] (binaryposition) -- (ytip) node[pos=1+\cbcframes@AxisLabelPad]{$y$};
+                    \draw[coordinate axis] (binaryposition) -- (ztip) node[pos=1+\cbcframes@AxisLabelPad]{$z$};
                 }{}
 
 
